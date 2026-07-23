@@ -14,55 +14,54 @@ export function SummaryDashboard({ summary }: SummaryDashboardProps) {
   return (
     <section className="space-y-6 print:hidden">
       {/* 3-Column Top KPI Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
         {/* Total Bazaar */}
-        <div className="bg-white border border-zinc-200 rounded-xl p-6 flex items-center gap-5 shadow-xs transition-transform hover:-translate-y-0.5">
+        <div className="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 flex items-center gap-5 shadow-xs hover:shadow-md transition-all duration-200">
           <div className="p-4 bg-emerald-500/10 text-emerald-600 rounded-xl">
             <ShoppingBag className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Total Mess Bazaar</p>
-            <h3 className="text-2xl font-extrabold text-zinc-850 mt-1">${totalBazaar.toFixed(2)}</h3>
-            <p className="text-xs text-zinc-400 mt-0.5">Sum of all bazaar deposits</p>
+            <p className="text-[10px] sm:text-xs font-bold text-zinc-500 uppercase tracking-wider">Total Mess Bazaar</p>
+            <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 mt-1">${totalBazaar.toFixed(2)}</h3>
+            <p className="text-[10px] text-zinc-400 mt-0.5 font-medium">All member deposits</p>
           </div>
         </div>
 
         {/* Total Meals */}
-        <div className="bg-white border border-zinc-200 rounded-xl p-6 flex items-center gap-5 shadow-xs transition-transform hover:-translate-y-0.5">
+        <div className="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 flex items-center gap-5 shadow-xs hover:shadow-md transition-all duration-200">
           <div className="p-4 bg-amber-500/10 text-amber-600 rounded-xl">
             <Utensils className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Total Mess Meals</p>
-            <h3 className="text-2xl font-extrabold text-zinc-850 mt-1">{totalMeals.toFixed(1)}</h3>
-            <p className="text-xs text-zinc-400 mt-0.5">Aggregate meals consumed</p>
+            <p className="text-[10px] sm:text-xs font-bold text-zinc-500 uppercase tracking-wider">Total Mess Meals</p>
+            <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 mt-1">{totalMeals.toFixed(1)}</h3>
+            <p className="text-[10px] text-zinc-400 mt-0.5 font-medium">Total meals eaten</p>
           </div>
         </div>
 
         {/* Current Meal Rate */}
-        <div className="bg-white border border-zinc-200 rounded-xl p-6 flex items-center gap-5 shadow-xs transition-transform hover:-translate-y-0.5 relative overflow-hidden">
+        <div className="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 flex items-center gap-5 shadow-xs hover:shadow-md transition-all duration-200 relative overflow-hidden">
           <div className="p-4 bg-emerald-600/10 text-emerald-700 rounded-xl">
             <Award className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Current Meal Rate</p>
-            <h3 className="text-2xl font-extrabold text-zinc-850 mt-1">
+            <p className="text-[10px] sm:text-xs font-bold text-zinc-500 uppercase tracking-wider">Current Meal Rate</p>
+            <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 mt-1">
               ${currentMealRate.toFixed(4)}
             </h3>
-            <p className="text-xs text-zinc-400 mt-0.5">Total Bazaar / Total Meals</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5 font-medium">Bazaar / Total Meals</p>
           </div>
-          <div className="absolute right-0 bottom-0 top-0 w-1/3 bg-radial from-transparent to-zinc-50/50 pointer-events-none" />
         </div>
       </div>
 
       {/* Settlement Cards Section */}
       <div>
-        <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider mb-4">
+        <h3 className="text-xs font-extrabold text-zinc-400 uppercase tracking-wider mb-4">
           Individual Balance & Settlement Sheets
         </h3>
 
         {results.length === 0 ? (
-          <div className="text-center py-8 bg-zinc-50 border border-zinc-200 rounded-xl text-zinc-400 text-sm font-semibold">
+          <div className="text-center py-8 bg-zinc-50 border border-zinc-200 rounded-2xl text-zinc-400 text-sm font-semibold">
             Add members to view individual balance calculations.
           </div>
         ) : (
@@ -75,32 +74,32 @@ export function SummaryDashboard({ summary }: SummaryDashboardProps) {
               return (
                 <div
                   key={member.id}
-                  className={`border rounded-xl p-5 shadow-xs flex flex-col justify-between transition-all bg-white hover:shadow-md ${
+                  className={`border rounded-2xl p-5 shadow-2xs flex flex-col justify-between transition-all duration-200 bg-white hover:shadow-md hover:-translate-y-0.5 ${
                     isOwed
-                      ? 'border-emerald-200 hover:border-emerald-300'
+                      ? 'border-emerald-200 hover:border-emerald-400/80'
                       : isOwes
-                      ? 'border-rose-200 hover:border-rose-300'
-                      : 'border-zinc-200 hover:border-zinc-300'
+                      ? 'border-rose-200 hover:border-rose-400/80'
+                      : 'border-zinc-200 hover:border-zinc-400/80'
                   }`}
                 >
                   <div>
                     {/* Header Name & Settlement Status */}
-                    <div className="flex items-start justify-between gap-2">
-                      <h4 className="font-bold text-zinc-800 text-base leading-tight break-words max-w-[70%]">
-                        {member.name || 'Unnamed Member'}
+                    <div className="flex items-start justify-between gap-3">
+                      <h4 className="font-extrabold text-zinc-800 text-sm sm:text-base leading-tight break-words max-w-[70%]">
+                        {member.name || 'Unnamed'}
                       </h4>
                       {isOwed && (
-                        <span className="flex items-center gap-1 text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full uppercase">
+                        <span className="flex items-center gap-1 text-[9px] font-extrabold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full uppercase tracking-wider">
                           <TrendingUp className="w-3 h-3" /> Receives
                         </span>
                       )}
                       {isOwes && (
-                        <span className="flex items-center gap-1 text-[10px] font-extrabold bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full uppercase">
+                        <span className="flex items-center gap-1 text-[9px] font-extrabold bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full uppercase tracking-wider">
                           <TrendingDown className="w-3 h-3" /> Owes
                         </span>
                       )}
                       {!isOwed && !isOwes && (
-                        <span className="text-[10px] font-extrabold bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded-full uppercase">
+                        <span className="text-[9px] font-extrabold bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded-full uppercase tracking-wider">
                           Settle-0
                         </span>
                       )}
@@ -108,11 +107,11 @@ export function SummaryDashboard({ summary }: SummaryDashboardProps) {
 
                     {/* Final Net Amount Display */}
                     <div className="mt-4">
-                      <p className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-wider">
+                      <p className="text-[9px] font-extrabold text-zinc-450 uppercase tracking-wider">
                         Settlement Balance
                       </p>
                       <h5
-                        className={`text-2xl font-black tracking-tight mt-0.5 ${
+                        className={`text-xl sm:text-2xl font-black tracking-tight mt-0.5 ${
                           isOwed
                             ? 'text-emerald-600'
                             : isOwes
@@ -125,7 +124,7 @@ export function SummaryDashboard({ summary }: SummaryDashboardProps) {
                     </div>
 
                     {/* Expanded Costs Breakdown */}
-                    <div className="mt-5 space-y-2 border-t border-zinc-100 pt-4 text-xs">
+                    <div className="mt-4 space-y-2 border-t border-zinc-100 pt-4 text-[11px] sm:text-xs">
                       <div className="flex justify-between items-center text-zinc-500">
                         <span>Bazaar Deposit:</span>
                         <span className="font-bold text-zinc-700">${(member.bazaarAmount || 0).toFixed(2)}</span>
@@ -144,8 +143,8 @@ export function SummaryDashboard({ summary }: SummaryDashboardProps) {
                   </div>
 
                   {/* Summary Box Footer */}
-                  <div className="mt-4 pt-3 border-t border-zinc-100 bg-zinc-50 -mx-5 -mb-5 px-5 py-3 rounded-b-xl flex justify-between items-center">
-                    <span className="text-[10px] font-extrabold text-zinc-400 uppercase">Total Expense</span>
+                  <div className="mt-4 pt-3 border-t border-zinc-100 bg-zinc-50/50 -mx-5 -mb-5 px-5 py-3 rounded-b-2xl flex justify-between items-center">
+                    <span className="text-[9px] font-extrabold text-zinc-400 uppercase tracking-wider">Total Personal Cost</span>
                     <span className="text-xs font-bold text-zinc-800">${totalPersonalExpense.toFixed(2)}</span>
                   </div>
                 </div>
