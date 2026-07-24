@@ -5,8 +5,12 @@
 ▲ Next.js 16.2.6 (Turbopack)
 - Local:         http://localhost:3000
 - Network:       http://192.168.0.2:3000
-✓ Ready in 555ms
+✓ Ready in 532ms
 
- HEAD / 200 in 3.5s (next.js: 3.2s, application-code: 290ms)
- GET / 200 in 163ms (next.js: 18ms, application-code: 145ms)
- GET / 200 in 89ms (next.js: 4ms, application-code: 85ms)
+○ Compiling / ...
+ GET / 200 in 8.7s (next.js: 8.0s, application-code: 643ms)
+ GET / 200 in 93ms (next.js: 5ms, application-code: 88ms)
+ GET / 200 in 79ms (next.js: 6ms, application-code: 73ms)
+ GET / 200 in 80ms (next.js: 4ms, application-code: 76ms)
+ GET / 200 in 90ms (next.js: 4ms, application-code: 86ms)
+ GET / 200 in 90ms (next.js: 5ms, application-code: 86ms)

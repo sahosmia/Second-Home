@@ -55,13 +55,23 @@ const DEFAULT_MEMBERS: Member[] = [
 
 export function useMessState() {
   const [categories, setCategories] = useState<CostCategory[]>(DEFAULT_CATEGORIES);
-  const [members, setMembers] = useState<Member[]>(DEFAULT_MEMBERS);
+  // Set initial members state to empty as per requirements: "The initial member list MUST start empty ([])"
+  const [members, setMembers] = useState<Member[]>([]);
+  const [messName, setMessName] = useState<string>('Second Home');
+
+  // Format current month: "YYYY-MM" (e.g. "2025-05")
+  const getCurrentMonthYear = () => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    return `${year}-${month}`;
+  };
+  const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonthYear());
 
   // Hook beforeunload to prevent accidental browser refresh or page close
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
-      // standard modern specification requires returning a string or setting returnValue
       e.returnValue = 'You have unsaved changes. Are you sure you want to exit?';
       return e.returnValue;
     };
@@ -183,6 +193,10 @@ export function useMessState() {
   return {
     categories,
     members,
+    messName,
+    setMessName,
+    selectedMonth,
+    setSelectedMonth,
     addCategory,
     removeCategory,
     updateCategoryLumpSum,
