@@ -59,9 +59,10 @@ export function generateMessPDF(
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(14);
   doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
-  doc.text(`$${summary.totalBazaar.toFixed(2)}`, 25, currentY + 17);
+  // Use Taka Symbol
+  doc.text(`Tk. ${summary.totalBazaar.toFixed(2)}`, 25, currentY + 17);
   doc.text(`${summary.totalMeals.toFixed(1)}`, 85, currentY + 17);
-  doc.text(`$${summary.currentMealRate.toFixed(4)}`, 145, currentY + 17);
+  doc.text(`Tk. ${summary.currentMealRate.toFixed(4)}`, 145, currentY + 17);
 
   // 3. Calculation Table
   currentY += 38;
@@ -79,12 +80,12 @@ export function generateMessPDF(
   doc.setFontSize(8.5);
   doc.setTextColor(255, 255, 255);
   doc.text('Member Name', 18, currentY + 5.5);
-  doc.text('Bazaar ($)', 65, currentY + 5.5);
+  doc.text('Bazaar (Tk.)', 65, currentY + 5.5);
   doc.text('Meals', 92, currentY + 5.5);
-  doc.text('Meal Exp ($)', 112, currentY + 5.5);
-  doc.text('Adjust ($)', 137, currentY + 5.5);
-  doc.text('Total Exp ($)', 160, currentY + 5.5);
-  doc.text('Balance ($)', 182, currentY + 5.5);
+  doc.text('Meal Exp (Tk.)', 112, currentY + 5.5);
+  doc.text('Adjust (Tk.)', 137, currentY + 5.5);
+  doc.text('Total Exp (Tk.)', 160, currentY + 5.5);
+  doc.text('Balance (Tk.)', 182, currentY + 5.5);
 
   // Table Body Rows
   currentY += 8;
@@ -163,7 +164,10 @@ export function generateMessPDF(
   doc.setTextColor(161, 161, 170); // Zinc 400
   doc.text('This is a client-side generated report. No database or external servers are utilized, ensuring absolute data privacy.', 15, 280);
 
-  // Save the PDF
-  const formattedName = messName.toLowerCase().replace(/\s+/g, '-');
-  doc.save(`${formattedName}-${selectedMonth}-summary.pdf`);
+  // Show the summary of PDF version in a new tab instead of direct forced auto-download
+  if (typeof window !== 'undefined') {
+    const blob = doc.output('blob');
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+  }
 }

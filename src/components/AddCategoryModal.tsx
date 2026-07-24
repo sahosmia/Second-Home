@@ -1,22 +1,25 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, HelpCircle, PlusCircle, Settings } from 'lucide-react';
-import { CostCategory, CostType, SplitType } from '../types';
+import { X, HelpCircle, PlusCircle, Settings, Users } from 'lucide-react';
+import { CostCategory, CostType, SplitType, Member } from '../types';
 
 interface AddCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   categories: CostCategory[];
-  memberCount: number;
-  onAddCategory: (category: Omit<CostCategory, 'id'>) => void;
+  members: Member[];
+  onAddCategory: (
+    category: Omit<CostCategory, 'id'>,
+    initialMemberAmounts?: { [memberId: string]: number }
+  ) => void;
 }
 
 export function AddCategoryModal({
   isOpen,
   onClose,
   categories,
-  memberCount,
+  members,
   onAddCategory,
 }: AddCategoryModalProps) {
   const [name, setName] = useState<string>('');
@@ -25,7 +28,23 @@ export function AddCategoryModal({
   const [lumpSum, setLumpSum] = useState<string>('');
   const [error, setError] = useState<string>('');
 
+  // Track initial amounts for each member if splitType is INDIVIDUAL
+  const [memberAmounts, setMemberAmounts] = useState<{ [memberId: string]: string }>(() => {
+    const initialAmounts: { [memberId: string]: string } = {};
+    members.forEach((m) => {
+      initialAmounts[m.id] = '';
+    });
+    return initialAmounts;
+  });
+
   if (!isOpen) return null;
+
+  const handleMemberAmountChange = (memberId: string, value: string) => {
+    setMemberAmounts((prev) => ({
+      ...prev,
+      [memberId]: value,
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,25 +63,28 @@ export function AddCategoryModal({
 
     const finalLumpSum = splitType === 'EQUAL' ? parseFloat(lumpSum) || 0 : undefined;
 
+    const initialAmounts: { [memberId: string]: number } = {};
+    if (splitType === 'INDIVIDUAL') {
+      members.forEach((m) => {
+        initialAmounts[m.id] = parseFloat(memberAmounts[m.id]) || 0;
+      });
+    }
+
     onAddCategory({
       name: trimmedName,
       type,
       splitType,
       totalLumpSum: finalLumpSum,
-    });
+    }, initialAmounts);
 
-    // Reset fields & close
-    setName('');
-    setLumpSum('');
-    setError('');
     onClose();
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-      <div className="bg-white border border-zinc-200 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-scale-in">
+      <div className="bg-white border border-zinc-200 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-scale-in max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="bg-zinc-50 border-b border-zinc-150 px-6 py-4 flex items-center justify-between">
+        <div className="bg-zinc-50 border-b border-zinc-150 px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <div className="p-1.5 bg-emerald-500/10 text-emerald-600 rounded-lg">
               <Settings className="w-4 h-4" />
@@ -78,7 +100,7 @@ export function AddCategoryModal({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1">
           {error && (
             <p className="p-2.5 bg-rose-50 border border-rose-100 text-rose-600 text-xs font-bold rounded-xl">
               {error}
@@ -95,7 +117,7 @@ export function AddCategoryModal({
               placeholder="e.g. WiFi Bill, Room Rent, Gas"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 border border-zinc-300 rounded-xl text-zinc-850 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white font-medium transition-all"
+              className="w-full px-3.5 py-2.5 border border-zinc-350 rounded-xl text-zinc-855 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white font-medium transition-all"
             />
           </div>
 
@@ -166,11 +188,11 @@ export function AddCategoryModal({
           {splitType === 'EQUAL' && (
             <div className="bg-emerald-50/50 p-4 border border-emerald-100 rounded-2xl animate-in slide-in-from-top-1 duration-150">
               <label htmlFor="modal-lump-sum" className="block text-xs font-bold text-emerald-800 uppercase mb-1.5">
-                Total Lump Sum Amount ($)
+                Total Lump Sum Amount (৳)
               </label>
               <div className="relative rounded-xl shadow-xs">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-emerald-600 font-bold text-sm">$</span>
+                  <span className="text-emerald-600 font-bold text-sm">৳</span>
                 </div>
                 <input
                   id="modal-lump-sum"
@@ -180,20 +202,55 @@ export function AddCategoryModal({
                   placeholder="0.00"
                   value={lumpSum}
                   onChange={(e) => setLumpSum(e.target.value)}
-                  className="w-full pl-7 pr-3 py-2 border border-emerald-200 rounded-xl text-emerald-950 font-bold text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full pl-7 pr-3 py-2 border border-emerald-200 rounded-xl text-emerald-955 font-bold text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
-              <p className="text-[11px] text-emerald-700 mt-2 leading-relaxed">
-                Will auto-divide equally across all <strong>{memberCount}</strong> current member{memberCount !== 1 ? 's' : ''} (<strong>${memberCount > 0 ? ((parseFloat(lumpSum) || 0) / memberCount).toFixed(2) : '0.00'}</strong> each).
+              <p className="text-[11px] text-emerald-705 mt-2 leading-relaxed">
+                Will auto-divide equally across all <strong>{members.length}</strong> current member{members.length !== 1 ? 's' : ''} (<strong>৳{members.length > 0 ? ((parseFloat(lumpSum) || 0) / members.length).toFixed(2) : '0.00'}</strong> each).
               </p>
             </div>
           )}
 
-          <div className="flex items-center gap-2.5 pt-4 border-t border-zinc-150">
+          {splitType === 'INDIVIDUAL' && (
+            <div className="pt-3 border-t border-zinc-150 space-y-3 animate-in slide-in-from-top-1 duration-150">
+              <h3 className="text-xs font-extrabold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5" />
+                Initial Per-Member Allocation
+              </h3>
+
+              {members.length === 0 ? (
+                <p className="text-xs text-zinc-400 italic">No members currently added to allocate dues to.</p>
+              ) : (
+                <div className="space-y-2.5 max-h-[200px] overflow-y-auto pr-1">
+                  {members.map((m) => (
+                    <div key={m.id} className="flex items-center justify-between gap-3 bg-zinc-50/70 p-2.5 rounded-xl border border-zinc-200">
+                      <span className="text-xs font-extrabold text-zinc-700 truncate">{m.name}</span>
+                      <div className="relative rounded-lg shadow-xs w-28 shrink-0">
+                        <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                          <span className="text-zinc-400 font-bold text-[10px]">৳</span>
+                        </div>
+                        <input
+                          type="number"
+                          min="0"
+                          step="any"
+                          placeholder="0.00"
+                          value={memberAmounts[m.id] || ''}
+                          onChange={(e) => handleMemberAmountChange(m.id, e.target.value)}
+                          className="w-full pl-6 pr-2.5 py-1 border border-zinc-300 rounded-lg text-zinc-855 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="flex items-center gap-2.5 pt-4 border-t border-zinc-150 shrink-0">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-500 hover:text-zinc-850 border border-zinc-300 hover:bg-zinc-50 rounded-xl transition-all cursor-pointer"
+              className="flex-1 px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-500 hover:text-zinc-855 border border-zinc-300 hover:bg-zinc-50 rounded-xl transition-all cursor-pointer"
             >
               Cancel
             </button>

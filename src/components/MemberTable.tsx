@@ -39,7 +39,7 @@ export function MemberTable({
           <button
             type="button"
             onClick={onOpenAddMemberModal}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-550 rounded-lg shadow-sm transition-all cursor-pointer active:scale-97"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-555 rounded-lg shadow-sm transition-all cursor-pointer active:scale-97"
             title="Add New Member"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -67,7 +67,7 @@ export function MemberTable({
                     Member Name
                   </th>
                   <th scope="col" className="px-5 py-3 text-center min-w-[120px]">
-                    Bazaar ($)
+                    Bazaar (৳)
                   </th>
                   <th scope="col" className="px-5 py-3 text-center min-w-[90px]">
                     Meals
@@ -116,7 +116,7 @@ export function MemberTable({
                     {/* Bazaar */}
                     <td className="px-5 py-3.5 text-center">
                       <div className="flex items-center justify-center gap-1 max-w-[100px] mx-auto bg-zinc-50/50 hover:bg-zinc-100/60 focus-within:bg-white focus-within:ring-2 focus-within:ring-emerald-500/20 px-2 py-0.5 rounded-lg border border-zinc-200 transition-all">
-                        <span className="text-zinc-400 font-bold text-[10px]">$</span>
+                        <span className="text-zinc-400 font-bold text-[10px]">৳</span>
                         <input
                           type="number"
                           min="0"
@@ -129,7 +129,7 @@ export function MemberTable({
                               parseFloat(e.target.value) || 0
                             )
                           }
-                          className="w-full text-center bg-transparent border-0 focus:outline-none focus:ring-0 text-zinc-850 font-bold text-xs p-0"
+                          className="w-full text-center bg-transparent border-0 focus:outline-none focus:ring-0 text-zinc-855 font-bold text-xs p-0"
                         />
                       </div>
                     </td>
@@ -149,7 +149,7 @@ export function MemberTable({
                               parseFloat(e.target.value) || 0
                             )
                           }
-                          className="w-full text-center bg-transparent border-0 focus:outline-none focus:ring-0 text-zinc-850 font-bold text-xs p-0"
+                          className="w-full text-center bg-transparent border-0 focus:outline-none focus:ring-0 text-zinc-855 font-bold text-xs p-0"
                         />
                       </div>
                     </td>
@@ -162,7 +162,7 @@ export function MemberTable({
                       return (
                         <td key={cat.id} className="px-5 py-3.5 text-center">
                           <div className="flex items-center justify-center gap-1 max-w-[100px] mx-auto bg-zinc-50/50 hover:bg-zinc-100/60 focus-within:bg-white focus-within:ring-2 focus-within:ring-emerald-500/20 px-2 py-0.5 rounded-lg border border-zinc-200 transition-all">
-                            <span className="text-zinc-450 font-semibold text-[10px]">$</span>
+                            <span className="text-zinc-455 font-semibold text-[10px]">৳</span>
                             <input
                               type="number"
                               min="0"

@@ -83,21 +83,25 @@ export function useMessState() {
   }, []);
 
   // Category Management Operations
-  const addCategory = (category: Omit<CostCategory, 'id'>) => {
+  const addCategory = (
+    category: Omit<CostCategory, 'id'>,
+    initialMemberAmounts?: { [memberId: string]: number }
+  ) => {
     const id = `cat-${Date.now()}`;
     const newCategory: CostCategory = { ...category, id };
     
     setCategories((prev) => [...prev, newCategory]);
 
     // Initialize custom cost values for INDIVIDUAL split categories in current members
-    if (category.splitType === 'INDIVIDUAL') {
-      setMembers((prevMembers) =>
-        prevMembers.map((member) => ({
+    setMembers((prevMembers) =>
+      prevMembers.map((member) => {
+        const initialAmount = initialMemberAmounts?.[member.id] || 0;
+        return {
           ...member,
-          customCosts: [...member.customCosts, { categoryId: id, amount: 0 }],
-        }))
-      );
-    }
+          customCosts: [...member.customCosts, { categoryId: id, amount: initialAmount }],
+        };
+      })
+    );
   };
 
   const removeCategory = (id: string) => {
@@ -117,17 +121,42 @@ export function useMessState() {
     );
   };
 
+  const toggleCategoryMemberExclusion = (categoryId: string, memberId: string) => {
+    setCategories((prev) =>
+      prev.map((cat) => {
+        if (cat.id !== categoryId) return cat;
+        const currentExclusions = cat.excludedMemberIds || [];
+        const isExcluded = currentExclusions.includes(memberId);
+        const newExclusions = isExcluded
+          ? currentExclusions.filter((id) => id !== memberId)
+          : [...currentExclusions, memberId];
+        return {
+          ...cat,
+          excludedMemberIds: newExclusions,
+        };
+      })
+    );
+  };
+
   // Member Management Operations
-  const addMember = (name: string, bazaarAmount: number, totalMeals: number) => {
+  const addMember = (
+    name: string,
+    bazaarAmount: number,
+    totalMeals: number,
+    initialCustomCosts?: { categoryId: string; amount: number }[]
+  ) => {
     const id = `m-${Date.now()}`;
     
     // Create custom cost inputs for all INDIVIDUAL categories
     const customCosts: MemberCostInput[] = categories
       .filter((cat) => cat.splitType === 'INDIVIDUAL')
-      .map((cat) => ({
-        categoryId: cat.id,
-        amount: 0,
-      }));
+      .map((cat) => {
+        const found = initialCustomCosts?.find((icc) => icc.categoryId === cat.id);
+        return {
+          categoryId: cat.id,
+          amount: found ? found.amount : 0,
+        };
+      });
 
     const newMember: Member = {
       id,
@@ -200,6 +229,7 @@ export function useMessState() {
     addCategory,
     removeCategory,
     updateCategoryLumpSum,
+    toggleCategoryMemberExclusion,
     addMember,
     removeMember,
     updateMemberBasic,

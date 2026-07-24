@@ -10,6 +10,7 @@ import { MemberTable } from '../src/components/MemberTable';
 import { AddMemberModal } from '../src/components/AddMemberModal';
 import { AddCategoryModal } from '../src/components/AddCategoryModal';
 import { generateMessPDF } from '../src/utils/pdfGenerator';
+import { Heart } from 'lucide-react';
 
 export default function Home() {
   const {
@@ -22,6 +23,7 @@ export default function Home() {
     addCategory,
     removeCategory,
     updateCategoryLumpSum,
+    toggleCategoryMemberExclusion,
     addMember,
     removeMember,
     updateMemberBasic,
@@ -86,27 +88,49 @@ export default function Home() {
         {/* Categories Manager Panel */}
         <CategoryManager
           categories={categories}
-          memberCount={members.length}
+          members={members}
           onOpenAddCategoryModal={() => setIsCategoryModalOpen(true)}
           onRemoveCategory={removeCategory}
           onUpdateLumpSum={updateCategoryLumpSum}
+          onToggleExclusion={toggleCategoryMemberExclusion}
         />
       </main>
 
-      {/* Modal Forms */}
-      <AddMemberModal
-        isOpen={isMemberModalOpen}
-        onClose={() => setIsMemberModalOpen(false)}
-        onAddMember={addMember}
-      />
+      {/* Elegant attributions footer as requested */}
+      <footer className="border-t border-zinc-200 bg-white py-6 mt-12 print:hidden shrink-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-zinc-500">
+          <div className="flex items-center gap-1">
+            <span>Designed & Developed with</span>
+            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+            <span>by <strong className="text-zinc-800">Jules Software</strong></span>
+          </div>
+          <div>
+            <span>Second Home Mess Management Engine v1.2</span>
+          </div>
+        </div>
+      </footer>
 
-      <AddCategoryModal
-        isOpen={isCategoryModalOpen}
-        onClose={() => setIsCategoryModalOpen(false)}
-        categories={categories}
-        memberCount={members.length}
-        onAddCategory={addCategory}
-      />
+      {/* Modal Forms with dynamic keys to force state resetting on mount */}
+      {isMemberModalOpen && (
+        <AddMemberModal
+          key={`member-modal-${isMemberModalOpen}`}
+          isOpen={isMemberModalOpen}
+          onClose={() => setIsMemberModalOpen(false)}
+          categories={categories}
+          onAddMember={addMember}
+        />
+      )}
+
+      {isCategoryModalOpen && (
+        <AddCategoryModal
+          key={`category-modal-${isCategoryModalOpen}`}
+          isOpen={isCategoryModalOpen}
+          onClose={() => setIsCategoryModalOpen(false)}
+          categories={categories}
+          members={members}
+          onAddCategory={addCategory}
+        />
+      )}
     </div>
   );
 }

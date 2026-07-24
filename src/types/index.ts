@@ -7,6 +7,7 @@ export interface CostCategory {
   type: CostType;
   splitType: SplitType;
   totalLumpSum?: number; // Used if splitType is 'EQUAL'
+  excludedMemberIds?: string[]; // IDs of members excluded from EQUAL split
 }
 
 export interface MemberCostInput {
