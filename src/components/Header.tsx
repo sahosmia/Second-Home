@@ -38,10 +38,11 @@ export function Header({
   const [isHardResetChecked, setIsHardResetChecked] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    /* eslint-disable-next-line react-hooks/set-state-in-effect */
     setMounted(true);
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Responsive mobile menu toggle state
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);

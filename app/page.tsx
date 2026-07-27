@@ -26,10 +26,10 @@ export default function Home() {
     toggleCategoryMemberExclusion,
     addMember,
     removeMember,
-    updateMemberBasic,
-    updateMemberCustomCost,
     clearAllData,
     resetToDefault,
+    isLoaded,
+    updateMemberFull,
   } = useMessState();
 
   // Modal open states
@@ -38,6 +38,26 @@ export default function Home() {
 
   // Run dynamic math engine over current live memory states
   const summary = calculateMessDetails(members, categories);
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-zinc-955 flex flex-col items-center justify-center font-sans text-zinc-100 gap-4">
+        {/* Animated Custom Ring Spinner */}
+        <div className="relative w-14 h-14">
+          <div className="absolute inset-0 rounded-full border-4 border-emerald-500/15"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-t-emerald-500 border-r-emerald-500 animate-spin"></div>
+        </div>
+        <div className="space-y-1 text-center">
+          <h2 className="text-lg font-black tracking-wider bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
+            Second Home
+          </h2>
+          <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">
+            Loading your ledger...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const handleDownloadPDF = () => {
     generateMessPDF(messName, selectedMonth, summary);
@@ -81,8 +101,7 @@ export default function Home() {
           categories={categories}
           onOpenAddMemberModal={() => setIsMemberModalOpen(true)}
           onRemoveMember={removeMember}
-          onUpdateMemberBasic={updateMemberBasic}
-          onUpdateMemberCustomCost={updateMemberCustomCost}
+          onUpdateMemberFull={updateMemberFull}
         />
 
         {/* Categories Manager Panel */}

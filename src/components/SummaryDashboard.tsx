@@ -13,43 +13,43 @@ export function SummaryDashboard({ summary }: SummaryDashboardProps) {
 
   return (
     <section className="space-y-6 print:hidden">
-      {/* 3-Column Top KPI Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+      {/* 3-Column Top KPI Grid (Highly Responsive & Space-saving on Mobile) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6">
         {/* Total Bazaar */}
-        <div className="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 flex items-center gap-5 shadow-xs hover:shadow-md transition-all duration-200">
-          <div className="p-4 bg-emerald-500/10 text-emerald-600 rounded-xl">
-            <ShoppingBag className="w-6 h-6" />
+        <div className="bg-white border border-zinc-200 rounded-2xl p-3 sm:p-6 flex items-center gap-3 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 col-span-1">
+          <div className="p-2 sm:p-4 bg-emerald-500/10 text-emerald-600 rounded-xl shrink-0">
+            <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
-          <div>
-            <p className="text-[10px] sm:text-xs font-bold text-zinc-500 uppercase tracking-wider">Total Mess Bazaar</p>
-            <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 mt-1">৳{totalBazaar.toFixed(2)}</h3>
-            <p className="text-[10px] text-zinc-400 mt-0.5 font-medium">All member deposits</p>
+          <div className="min-w-0 flex-1">
+            <p className="text-[8px] sm:text-xs font-bold text-zinc-500 uppercase tracking-wider truncate">Total Bazaar</p>
+            <h3 className="text-sm sm:text-2xl font-black text-zinc-900 mt-0.5 sm:mt-1 truncate">৳{totalBazaar.toFixed(1)}</h3>
+            <p className="text-[8px] sm:text-[10px] text-zinc-400 mt-0.5 font-medium truncate">Member deposits</p>
           </div>
         </div>
 
         {/* Total Meals */}
-        <div className="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 flex items-center gap-5 shadow-xs hover:shadow-md transition-all duration-200">
-          <div className="p-4 bg-amber-500/10 text-amber-600 rounded-xl">
-            <Utensils className="w-6 h-6" />
+        <div className="bg-white border border-zinc-200 rounded-2xl p-3 sm:p-6 flex items-center gap-3 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 col-span-1">
+          <div className="p-2 sm:p-4 bg-amber-500/10 text-amber-600 rounded-xl shrink-0">
+            <Utensils className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
-          <div>
-            <p className="text-[10px] sm:text-xs font-bold text-zinc-500 uppercase tracking-wider">Total Mess Meals</p>
-            <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 mt-1">{totalMeals.toFixed(1)}</h3>
-            <p className="text-[10px] text-zinc-400 mt-0.5 font-medium">Total meals eaten</p>
+          <div className="min-w-0 flex-1">
+            <p className="text-[8px] sm:text-xs font-bold text-zinc-500 uppercase tracking-wider truncate">Total Meals</p>
+            <h3 className="text-sm sm:text-2xl font-black text-zinc-900 mt-0.5 sm:mt-1 truncate">{totalMeals.toFixed(1)}</h3>
+            <p className="text-[8px] sm:text-[10px] text-zinc-400 mt-0.5 font-medium truncate">Meals eaten</p>
           </div>
         </div>
 
         {/* Current Meal Rate */}
-        <div className="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 flex items-center gap-5 shadow-xs hover:shadow-md transition-all duration-200 relative overflow-hidden">
-          <div className="p-4 bg-emerald-600/10 text-emerald-700 rounded-xl">
-            <Award className="w-6 h-6" />
+        <div className="bg-white border border-zinc-200 rounded-2xl p-3 sm:p-6 flex items-center gap-3 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 relative overflow-hidden col-span-2 sm:col-span-1">
+          <div className="p-2 sm:p-4 bg-emerald-600/10 text-emerald-700 rounded-xl shrink-0">
+            <Award className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
-          <div>
-            <p className="text-[10px] sm:text-xs font-bold text-zinc-500 uppercase tracking-wider">Current Meal Rate</p>
-            <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 mt-1">
+          <div className="min-w-0 flex-1">
+            <p className="text-[8px] sm:text-xs font-bold text-zinc-500 uppercase tracking-wider truncate">Current Meal Rate</p>
+            <h3 className="text-sm sm:text-2xl font-black text-zinc-900 mt-0.5 sm:mt-1 truncate">
               ৳{currentMealRate.toFixed(4)}
             </h3>
-            <p className="text-[10px] text-zinc-400 mt-0.5 font-medium">Bazaar / Total Meals</p>
+            <p className="text-[8px] sm:text-[10px] text-zinc-400 mt-0.5 font-medium truncate">Bazaar / Total Meals</p>
           </div>
         </div>
       </div>

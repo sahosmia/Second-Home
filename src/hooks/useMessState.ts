@@ -100,7 +100,13 @@ export function useMessState() {
     } catch (e) {
       console.error('Failed to load from localStorage', e);
     }
-    setIsLoaded(true);
+
+    // Smooth transition delay during loading to allow state settling and avoid layout flicker
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 600);
+
+    return () => clearTimeout(timer);
   }, []);
 
   // Save changes to localStorage after loaded
@@ -267,6 +273,27 @@ export function useMessState() {
     );
   };
 
+  const updateMemberFull = (
+    id: string,
+    name: string,
+    bazaarAmount: number,
+    totalMeals: number,
+    customCosts: { categoryId: string; amount: number }[]
+  ) => {
+    setMembers((prev) =>
+      prev.map((m) => {
+        if (m.id !== id) return m;
+        return {
+          ...m,
+          name,
+          bazaarAmount,
+          totalMeals,
+          customCosts,
+        };
+      })
+    );
+  };
+
   const clearAllData = (isHard = false) => {
     if (isHard) {
       // Hard Reset: Clear all, remove local storage, and reset mess name
@@ -325,5 +352,7 @@ export function useMessState() {
     updateMemberCustomCost,
     clearAllData,
     resetToDefault,
+    isLoaded,
+    updateMemberFull,
   };
 }
