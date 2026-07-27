@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Home,
   RotateCcw,
@@ -19,7 +20,7 @@ interface HeaderProps {
   selectedMonth: string;
   setSelectedMonth: (month: string) => void;
   onReset: () => void;
-  onClear: () => void;
+  onClear: (isHard?: boolean) => void;
   onDownloadPDF: () => void;
 }
 
@@ -34,6 +35,14 @@ export function Header({
 }: HeaderProps) {
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [modalAction, setModalAction] = useState<'reset' | 'clear' | null>(null);
+  const [isHardResetChecked, setIsHardResetChecked] = useState<boolean>(false);
+  const [mounted, setMounted] = useState<boolean>(false);
+
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Responsive mobile menu toggle state
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
@@ -70,6 +79,7 @@ export function Header({
 
   const handleOpenModal = (action: 'reset' | 'clear') => {
     setModalAction(action);
+    setIsHardResetChecked(false);
     setShowConfirmModal(true);
     setMobileMenuOpen(false);
   };
@@ -78,7 +88,7 @@ export function Header({
     if (modalAction === 'reset') {
       onReset();
     } else if (modalAction === 'clear') {
-      onClear();
+      onClear(isHardResetChecked);
     }
     setShowConfirmModal(false);
     setModalAction(null);
@@ -260,7 +270,7 @@ export function Header({
       )}
 
       {/* Confirmation Modal */}
-      {showConfirmModal && (
+      {mounted && showConfirmModal && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-fade-in">
           <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 max-w-md w-full shadow-2xl transition-all scale-100 duration-200 text-zinc-100">
             <div className="flex items-center gap-3 mb-4">
@@ -272,11 +282,28 @@ export function Header({
               </h2>
             </div>
             
-            <p className="text-sm text-zinc-400 leading-relaxed mb-6">
-              {modalAction === 'reset'
-                ? 'This will overwrite your current configurations and restore our fully pre-filled bachelor mess example. Any custom updates in progress will be replaced.'
-                : 'This will completely empty all dynamic categories, bills, and members. This action cannot be reversed.'}
-            </p>
+            <div className="text-sm text-zinc-400 leading-relaxed mb-6">
+              {modalAction === 'reset' ? (
+                'This will overwrite your current configurations and restore our fully pre-filled bachelor mess example. Any custom updates in progress will be replaced.'
+              ) : (
+                <div className="space-y-4">
+                  <p className="font-medium text-zinc-200">
+                    Are you sure to reset all values to 0?
+                  </p>
+                  <label className="flex items-center gap-3 bg-zinc-900 hover:bg-zinc-800 p-3 rounded-xl border border-zinc-800 cursor-pointer select-none transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={isHardResetChecked}
+                      onChange={(e) => setIsHardResetChecked(e.target.checked)}
+                      className="w-4.5 h-4.5 accent-rose-500 rounded border-zinc-700 bg-zinc-950 focus:ring-rose-500 text-rose-500 cursor-pointer"
+                    />
+                    <span className="text-xs text-zinc-300 font-semibold leading-tight">
+                      Hard Reset (Delete members, categories, and clear local storage)
+                    </span>
+                  </label>
+                </div>
+              )}
+            </div>
 
             <div className="flex items-center justify-end gap-2.5">
               <button
@@ -297,7 +324,8 @@ export function Header({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </header>
   );

@@ -67,6 +67,7 @@ export function useMessState() {
     return `${year}-${month}`;
   };
   const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonthYear());
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   // Hook beforeunload to prevent accidental browser refresh or page close
   useEffect(() => {
@@ -81,6 +82,69 @@ export function useMessState() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
+
+  // Load state from localStorage on client mount
+  useEffect(() => {
+    try {
+      const savedCategories = localStorage.getItem('second_home_categories');
+      const savedMembers = localStorage.getItem('second_home_members');
+      const savedMessName = localStorage.getItem('second_home_messName');
+      const savedSelectedMonth = localStorage.getItem('second_home_selectedMonth');
+
+      /* eslint-disable react-hooks/set-state-in-effect */
+      if (savedCategories) setCategories(JSON.parse(savedCategories));
+      if (savedMembers) setMembers(JSON.parse(savedMembers));
+      if (savedMessName) setMessName(savedMessName);
+      if (savedSelectedMonth) setSelectedMonth(savedSelectedMonth);
+      /* eslint-enable react-hooks/set-state-in-effect */
+    } catch (e) {
+      console.error('Failed to load from localStorage', e);
+    }
+    
+    // Smooth transition delay during loading to allow state settling and avoid layout flicker
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Save changes to localStorage after loaded
+  useEffect(() => {
+    if (!isLoaded) return;
+    try {
+      localStorage.setItem('second_home_categories', JSON.stringify(categories));
+    } catch (e) {
+      console.error('Failed to save categories to localStorage', e);
+    }
+  }, [categories, isLoaded]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    try {
+      localStorage.setItem('second_home_members', JSON.stringify(members));
+    } catch (e) {
+      console.error('Failed to save members to localStorage', e);
+    }
+  }, [members, isLoaded]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    try {
+      localStorage.setItem('second_home_messName', messName);
+    } catch (e) {
+      console.error('Failed to save messName to localStorage', e);
+    }
+  }, [messName, isLoaded]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    try {
+      localStorage.setItem('second_home_selectedMonth', selectedMonth);
+    } catch (e) {
+      console.error('Failed to save selectedMonth to localStorage', e);
+    }
+  }, [selectedMonth, isLoaded]);
 
   // Category Management Operations
   const addCategory = (
@@ -209,9 +273,61 @@ export function useMessState() {
     );
   };
 
-  const clearAllData = () => {
-    setCategories([]);
-    setMembers([]);
+  const updateMemberFull = (
+    id: string,
+    name: string,
+    bazaarAmount: number,
+    totalMeals: number,
+    customCosts: { categoryId: string; amount: number }[]
+  ) => {
+    setMembers((prev) =>
+      prev.map((m) => {
+        if (m.id !== id) return m;
+        return {
+          ...m,
+          name,
+          bazaarAmount,
+          totalMeals,
+          customCosts,
+        };
+      })
+    );
+  };
+
+  const clearAllData = (isHard = false) => {
+    if (isHard) {
+      // Hard Reset: Clear all, remove local storage, and reset mess name
+      setCategories([]);
+      setMembers([]);
+      setMessName('Second Home');
+      try {
+        localStorage.removeItem('second_home_categories');
+        localStorage.removeItem('second_home_members');
+        localStorage.removeItem('second_home_messName');
+        localStorage.removeItem('second_home_selectedMonth');
+      } catch (e) {
+        console.error('Failed to clear localStorage', e);
+      }
+    } else {
+      // Soft Reset: Preserve members and categories name/type/splitType, reset numeric fields to 0
+      setCategories((prevCategories) =>
+        prevCategories.map((cat) => ({
+          ...cat,
+          totalLumpSum: cat.totalLumpSum !== undefined ? 0 : undefined,
+        }))
+      );
+      setMembers((prevMembers) =>
+        prevMembers.map((m) => ({
+          ...m,
+          bazaarAmount: 0,
+          totalMeals: 0,
+          customCosts: m.customCosts.map((cc) => ({
+            ...cc,
+            amount: 0,
+          })),
+        }))
+      );
+    }
   };
 
   const resetToDefault = () => {
@@ -236,5 +352,7 @@ export function useMessState() {
     updateMemberCustomCost,
     clearAllData,
     resetToDefault,
+    isLoaded,
+    updateMemberFull,
   };
 }
