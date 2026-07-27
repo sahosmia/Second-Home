@@ -4,10 +4,13 @@ import React, { useState } from 'react';
 import { X, Sparkles, UserPlus, HelpCircle } from 'lucide-react';
 import { CostCategory } from '../types';
 
+import { Language, getTranslation } from '../utils/translations';
+
 interface AddMemberModalProps {
   isOpen: boolean;
   onClose: () => void;
   categories: CostCategory[];
+  language: Language;
   onAddMember: (
     name: string,
     bazaarAmount: number,
@@ -16,7 +19,7 @@ interface AddMemberModalProps {
   ) => void;
 }
 
-export function AddMemberModal({ isOpen, onClose, categories, onAddMember }: AddMemberModalProps) {
+export function AddMemberModal({ isOpen, onClose, categories, language, onAddMember }: AddMemberModalProps) {
   const [name, setName] = useState<string>('');
   const [bazaar, setBazaar] = useState<string>('');
   const [meals, setMeals] = useState<string>('');
@@ -74,7 +77,7 @@ export function AddMemberModal({ isOpen, onClose, categories, onAddMember }: Add
             </div>
             <h2 className="text-base font-extrabold text-zinc-800 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
-              Add Mess Member
+              {getTranslation(language, 'addNewMember')}
             </h2>
           </div>
           <button
@@ -88,14 +91,14 @@ export function AddMemberModal({ isOpen, onClose, categories, onAddMember }: Add
         {/* Modal Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1">
           {error && (
-            <p className="p-2.5 bg-rose-50 border border-rose-100 text-rose-600 text-xs font-bold rounded-xl">
+            <p className="p-2.5 bg-rose-50 border border-rose-100 text-rose-600 text-xs font-bold rounded-xl text-left">
               {error}
             </p>
           )}
 
-          <div>
+          <div className="text-left">
             <label htmlFor="modal-member-name" className="block text-xs font-bold text-zinc-600 uppercase mb-1.5">
-              Full Name
+              {getTranslation(language, 'fullName')}
             </label>
             <input
               id="modal-member-name"
@@ -107,10 +110,10 @@ export function AddMemberModal({ isOpen, onClose, categories, onAddMember }: Add
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 text-left">
             <div>
               <label htmlFor="modal-member-bazaar" className="block text-xs font-bold text-zinc-600 uppercase mb-1.5">
-                Bazaar Deposit (৳)
+                {getTranslation(language, 'bazaarDepositInput')}
               </label>
               <input
                 id="modal-member-bazaar"
@@ -126,7 +129,7 @@ export function AddMemberModal({ isOpen, onClose, categories, onAddMember }: Add
 
             <div>
               <label htmlFor="modal-member-meals" className="block text-xs font-bold text-zinc-600 uppercase mb-1.5">
-                Meals Eaten
+                {getTranslation(language, 'mealsEatenInput')}
               </label>
               <input
                 id="modal-member-meals"
@@ -143,9 +146,9 @@ export function AddMemberModal({ isOpen, onClose, categories, onAddMember }: Add
 
           {/* Individual split category dynamic inputs (like Old Due or Advance Balance) */}
           {individualCategories.length > 0 && (
-            <div className="pt-3 border-t border-zinc-150 space-y-3">
+            <div className="pt-3 border-t border-zinc-150 space-y-3 text-left">
               <h3 className="text-xs font-extrabold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
-                Individual Custom Fees / Adjustments
+                {getTranslation(language, 'customFeesHeader')}
                 <span title="Amounts specific to this member at start">
                   <HelpCircle className="w-3.5 h-3.5 text-zinc-300" />
                 </span>
@@ -185,15 +188,15 @@ export function AddMemberModal({ isOpen, onClose, categories, onAddMember }: Add
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-500 hover:text-zinc-800 border border-zinc-300 hover:bg-zinc-50 rounded-xl transition-all cursor-pointer"
+              className="flex-1 px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-500 hover:text-zinc-800 border border-zinc-300 hover:bg-zinc-50 rounded-xl transition-all cursor-pointer text-center"
             >
-              Cancel
+              {getTranslation(language, 'cancel')}
             </button>
             <button
               type="submit"
-              className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl shadow-md shadow-emerald-600/10 transition-all cursor-pointer active:scale-95"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl shadow-md shadow-emerald-600/10 transition-all cursor-pointer active:scale-95 text-center"
             >
-              Add Member
+              {getTranslation(language, 'addMember')}
             </button>
           </div>
         </form>

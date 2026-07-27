@@ -5,11 +5,12 @@ import { useMessState } from '../src/hooks/useMessState';
 import { calculateMessDetails } from '../src/utils/calculations';
 import { Header } from '../src/components/Header';
 import { SummaryDashboard } from '../src/components/SummaryDashboard';
-import { CategoryManager } from '../src/components/CategoryManager';
+import { ExpenseManager } from '../src/components/ExpenseManager';
 import { AddMemberModal } from '../src/components/AddMemberModal';
-import { AddCategoryModal } from '../src/components/AddCategoryModal';
+import { AddExpenseModal } from '../src/components/AddExpenseModal';
 import { generateMessPDF } from '../src/utils/pdfGenerator';
 import { Heart } from 'lucide-react';
+import { getTranslation } from '../src/utils/translations';
 
 export default function Home() {
   const {
@@ -19,8 +20,11 @@ export default function Home() {
     setMessName,
     selectedMonth,
     setSelectedMonth,
+    language,
+    setLanguage,
     addCategory,
     removeCategory,
+    updateCategory,
     updateCategoryLumpSum,
     toggleCategoryMemberExclusion,
     addMember,
@@ -48,10 +52,10 @@ export default function Home() {
         </div>
         <div className="space-y-1 text-center">
           <h2 className="text-lg font-black tracking-wider bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
-            Second Home
+            {getTranslation(language, 'brandName')}
           </h2>
           <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">
-            Loading your ledger...
+            {getTranslation(language, 'loadingLedger')}
           </p>
         </div>
       </div>
@@ -70,6 +74,8 @@ export default function Home() {
         setMessName={setMessName}
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
+        language={language}
+        setLanguage={setLanguage}
         onReset={resetToDefault}
         onClear={clearAllData}
         onDownloadPDF={handleDownloadPDF}
@@ -80,10 +86,10 @@ export default function Home() {
         {/* Intro Branding */}
         <div className="space-y-1 sm:space-y-1.5">
           <h2 className="text-xl sm:text-2xl font-extrabold text-zinc-900 tracking-tight text-center sm:text-left">
-            Instant Mess Calculator
+            {getTranslation(language, 'instantCalculator')}
           </h2>
           <p className="text-xs sm:text-sm text-zinc-500 max-w-2xl font-medium hidden sm:block">
-            Seamless bachelor flat share, mess meal tracking, and customized individual expenses. Fill or modify values below to view instant, real-time recalculations.
+            {getTranslation(language, 'brandingSub')}
           </p>
         </div>
 
@@ -91,17 +97,20 @@ export default function Home() {
         <SummaryDashboard
           summary={summary}
           categories={categories}
+          language={language}
           onOpenAddMemberModal={() => setIsMemberModalOpen(true)}
           onRemoveMember={removeMember}
           onUpdateMemberFull={updateMemberFull}
         />
 
         {/* Categories Manager Panel */}
-        <CategoryManager
+        <ExpenseManager
           categories={categories}
           members={members}
+          language={language}
           onOpenAddCategoryModal={() => setIsCategoryModalOpen(true)}
           onRemoveCategory={removeCategory}
+          onUpdateCategory={updateCategory}
           onUpdateLumpSum={updateCategoryLumpSum}
           onToggleExclusion={toggleCategoryMemberExclusion}
         />
@@ -111,12 +120,12 @@ export default function Home() {
       <footer className="border-t border-zinc-200 bg-white py-6 mt-12 print:hidden shrink-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-zinc-500">
           <div className="flex items-center gap-1">
-            <span>Designed & Developed with</span>
+            <span>{getTranslation(language, 'designedBy')}</span>
             <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
             <span>by <strong className="text-zinc-800">Jules Software</strong></span>
           </div>
           <div>
-            <span>Second Home Mess Management Engine v1.2</span>
+            <span>{getTranslation(language, 'brandName')} Mess Engine v1.3</span>
           </div>
         </div>
       </footer>
@@ -128,18 +137,20 @@ export default function Home() {
           isOpen={isMemberModalOpen}
           onClose={() => setIsMemberModalOpen(false)}
           categories={categories}
+          language={language}
           onAddMember={addMember}
         />
       )}
 
       {isCategoryModalOpen && (
-        <AddCategoryModal
+        <AddExpenseModal
           key={`category-modal-${isCategoryModalOpen}`}
           isOpen={isCategoryModalOpen}
           onClose={() => setIsCategoryModalOpen(false)}
           categories={categories}
           members={members}
-          onAddCategory={addCategory}
+          language={language}
+          onAddExpense={addCategory}
         />
       )}
     </div>
