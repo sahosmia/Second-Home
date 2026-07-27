@@ -2,10 +2,16 @@
 > second-home@0.1.0 dev
 > next dev
 
+⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
 ▲ Next.js 16.2.6 (Turbopack)
-- Local:         http://localhost:3000
-- Network:       http://192.168.0.2:3000
-✓ Ready in 725ms
+- Local:         http://localhost:3001
+- Network:       http://192.168.0.2:3001
+✓ Ready in 605ms
+⨯ Another next dev server is already running.
 
-○ Compiling / ...
- GET / 200 in 6.8s (next.js: 6.2s, application-code: 628ms)
+- Local:      GET / 200 in 61ms (next.js: 7ms, application-code: 53ms)
+      /app
+- Log:          .next/dev/logs/next-development.log
+
+Run kill 254967 to stop it.
+[?25h

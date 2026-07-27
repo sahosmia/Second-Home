@@ -6,7 +6,6 @@ import { calculateMessDetails } from '../src/utils/calculations';
 import { Header } from '../src/components/Header';
 import { SummaryDashboard } from '../src/components/SummaryDashboard';
 import { CategoryManager } from '../src/components/CategoryManager';
-import { MemberTable } from '../src/components/MemberTable';
 import { AddMemberModal } from '../src/components/AddMemberModal';
 import { AddCategoryModal } from '../src/components/AddCategoryModal';
 import { generateMessPDF } from '../src/utils/pdfGenerator';
@@ -77,27 +76,20 @@ export default function Home() {
       />
 
       {/* Main Responsive Body Grid */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8 print:hidden">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-4 sm:py-8 sm:px-6 lg:px-8 space-y-6 sm:space-y-8 print:hidden">
         {/* Intro Branding */}
-        <div className="space-y-1.5">
-          <h2 className="text-2xl font-extrabold text-zinc-900 tracking-tight">
+        <div className="space-y-1 sm:space-y-1.5">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-zinc-900 tracking-tight text-center sm:text-left">
             Instant Mess Calculator
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-500 max-w-2xl font-medium">
+          <p className="text-xs sm:text-sm text-zinc-500 max-w-2xl font-medium hidden sm:block">
             Seamless bachelor flat share, mess meal tracking, and customized individual expenses. Fill or modify values below to view instant, real-time recalculations.
           </p>
         </div>
 
-        {/* Dashboard Analytics & Summary */}
-        <SummaryDashboard summary={summary} />
-
-        {/* REVISED PAGE LAYOUT ORDER:
-            1. Top Section: Mess Members Ledger & Main Input Table.
-            2. Bottom Section: Dynamic Category Management & Settings. */}
-
-        {/* Interactive Member Ledger Grid */}
-        <MemberTable
-          members={members}
+        {/* Dashboard Analytics & Summary (which now hosts Add, Edit, Delete members sheet) */}
+        <SummaryDashboard
+          summary={summary}
           categories={categories}
           onOpenAddMemberModal={() => setIsMemberModalOpen(true)}
           onRemoveMember={removeMember}
