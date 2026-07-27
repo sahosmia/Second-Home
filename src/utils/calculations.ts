@@ -8,6 +8,7 @@ export interface CalculatedMemberResult {
     type: 'PLUS' | 'MINUS';
     splitType: 'EQUAL' | 'INDIVIDUAL';
     amount: number; // For the individual member
+    isExcluded?: boolean;
   }[];
   totalPlus: number;
   totalMinus: number;
@@ -26,7 +27,7 @@ export interface MessCalculationSummary {
 
 /**
  * Calculates all mess figures dynamically based on state.
- * Supports splitType 'EQUAL' (auto-divided by current member count) and 'INDIVIDUAL' values.
+ * Supports splitType 'EQUAL' (auto-divided by current non-excluded member count) and 'INDIVIDUAL' values.
  */
 export function calculateMessDetails(
   members: Member[],
@@ -38,8 +39,6 @@ export function calculateMessDetails(
   // Calculate meal rate. Handle division by zero.
   const currentMealRate = totalMeals > 0 ? totalBazaar / totalMeals : 0;
 
-  const memberCount = members.length;
-
   const results: CalculatedMemberResult[] = members.map((member) => {
     const adjustments: CalculatedMemberResult['adjustments'] = [];
     let totalPlus = 0;
@@ -47,11 +46,20 @@ export function calculateMessDetails(
 
     categories.forEach((category) => {
       let amount = 0;
+      let isExcluded = false;
 
       if (category.splitType === 'EQUAL') {
-        // If SPLIT_TYPE is EQUAL, split totalLumpSum equally among all current members
-        const lumpSum = category.totalLumpSum || 0;
-        amount = memberCount > 0 ? lumpSum / memberCount : 0;
+        const excludedIds = category.excludedMemberIds || [];
+        isExcluded = excludedIds.includes(member.id);
+
+        if (isExcluded) {
+          amount = 0;
+        } else {
+          // Count only non-excluded members
+          const includedCount = members.filter((m) => !excludedIds.includes(m.id)).length;
+          const lumpSum = category.totalLumpSum || 0;
+          amount = includedCount > 0 ? lumpSum / includedCount : 0;
+        }
       } else {
         // INDIVIDUAL: find member's specific cost for this category
         const input = member.customCosts.find((c) => c.categoryId === category.id);
@@ -70,6 +78,7 @@ export function calculateMessDetails(
         type: category.type,
         splitType: category.splitType,
         amount,
+        isExcluded,
       });
     });
 

@@ -22,7 +22,7 @@ export function SummaryDashboard({ summary }: SummaryDashboardProps) {
           </div>
           <div>
             <p className="text-[10px] sm:text-xs font-bold text-zinc-500 uppercase tracking-wider">Total Mess Bazaar</p>
-            <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 mt-1">${totalBazaar.toFixed(2)}</h3>
+            <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 mt-1">৳{totalBazaar.toFixed(2)}</h3>
             <p className="text-[10px] text-zinc-400 mt-0.5 font-medium">All member deposits</p>
           </div>
         </div>
@@ -47,7 +47,7 @@ export function SummaryDashboard({ summary }: SummaryDashboardProps) {
           <div>
             <p className="text-[10px] sm:text-xs font-bold text-zinc-500 uppercase tracking-wider">Current Meal Rate</p>
             <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 mt-1">
-              ${currentMealRate.toFixed(4)}
+              ৳{currentMealRate.toFixed(4)}
             </h3>
             <p className="text-[10px] text-zinc-400 mt-0.5 font-medium">Bazaar / Total Meals</p>
           </div>
@@ -119,7 +119,7 @@ export function SummaryDashboard({ summary }: SummaryDashboardProps) {
                             : 'text-zinc-700'
                         }`}
                       >
-                        {isOwed ? '+' : isOwes ? '-' : ''}${absBalance.toFixed(2)}
+                        {isOwed ? '+' : isOwes ? '-' : ''}৳{absBalance.toFixed(2)}
                       </h5>
                     </div>
 
@@ -127,16 +127,16 @@ export function SummaryDashboard({ summary }: SummaryDashboardProps) {
                     <div className="mt-4 space-y-2 border-t border-zinc-100 pt-4 text-[11px] sm:text-xs">
                       <div className="flex justify-between items-center text-zinc-500">
                         <span>Bazaar Deposit:</span>
-                        <span className="font-bold text-zinc-700">${(member.bazaarAmount || 0).toFixed(2)}</span>
+                        <span className="font-bold text-zinc-700">৳{(member.bazaarAmount || 0).toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between items-center text-zinc-500">
                         <span>Meals ({member.totalMeals || 0}):</span>
-                        <span className="font-bold text-zinc-700">${mealExpense.toFixed(2)}</span>
+                        <span className="font-bold text-zinc-700">৳{mealExpense.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between items-center text-zinc-500">
-                        <span>Adjustments ($A_i$):</span>
+                        <span>Adjustments:</span>
                         <span className={`font-bold ${netAdjustment >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                          {netAdjustment >= 0 ? '+' : '-'}${Math.abs(netAdjustment).toFixed(2)}
+                          {netAdjustment >= 0 ? '+' : '-'}৳{Math.abs(netAdjustment).toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -145,7 +145,7 @@ export function SummaryDashboard({ summary }: SummaryDashboardProps) {
                   {/* Summary Box Footer */}
                   <div className="mt-4 pt-3 border-t border-zinc-100 bg-zinc-50/50 -mx-5 -mb-5 px-5 py-3 rounded-b-2xl flex justify-between items-center">
                     <span className="text-[9px] font-extrabold text-zinc-400 uppercase tracking-wider">Total Personal Cost</span>
-                    <span className="text-xs font-bold text-zinc-800">${totalPersonalExpense.toFixed(2)}</span>
+                    <span className="text-xs font-bold text-zinc-800">৳{totalPersonalExpense.toFixed(2)}</span>
                   </div>
                 </div>
               );
