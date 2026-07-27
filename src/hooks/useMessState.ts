@@ -205,7 +205,8 @@ export function useMessState() {
     name: string,
     type: CostType,
     splitType: SplitType,
-    totalLumpSum?: number
+    totalLumpSum?: number,
+    memberAmounts?: { [memberId: string]: number }
   ) => {
     setCategories((prev) =>
       prev.map((cat) =>
@@ -220,6 +221,28 @@ export function useMessState() {
           : cat
       )
     );
+
+    // If splitType is INDIVIDUAL and memberAmounts are provided, update custom costs for all members
+    if (splitType === 'INDIVIDUAL' && memberAmounts) {
+      setMembers((prevMembers) =>
+        prevMembers.map((member) => {
+          const newAmount = memberAmounts[member.id] ?? 0;
+          const exists = member.customCosts.some((cc) => cc.categoryId === id);
+          let newCosts;
+          if (exists) {
+            newCosts = member.customCosts.map((cc) =>
+              cc.categoryId === id ? { ...cc, amount: newAmount } : cc
+            );
+          } else {
+            newCosts = [...member.customCosts, { categoryId: id, amount: newAmount }];
+          }
+          return {
+            ...member,
+            customCosts: newCosts,
+          };
+        })
+      );
+    }
   };
 
   const toggleCategoryMemberExclusion = (categoryId: string, memberId: string) => {

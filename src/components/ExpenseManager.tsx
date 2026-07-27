@@ -229,6 +229,7 @@ export function ExpenseManager({
           isOpen={!!editingCategory}
           onClose={() => setEditingCategory(null)}
           category={editingCategory}
+          members={members}
           language={language}
           onUpdateExpense={onUpdateCategory}
         />

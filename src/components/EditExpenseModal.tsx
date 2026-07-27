@@ -2,20 +2,23 @@
 
 import React, { useState, useEffect } from 'react';
 import { X, Save, Edit, HelpCircle } from 'lucide-react';
-import { CostCategory, CostType, SplitType } from '../types';
+import { CostCategory, CostType, SplitType, Member } from '../types';
 import { Language, getTranslation } from '../utils/translations';
+import { Users } from 'lucide-react';
 
 interface EditExpenseModalProps {
   isOpen: boolean;
   onClose: () => void;
   category: CostCategory;
+  members: Member[];
   language: Language;
   onUpdateExpense: (
     id: string,
     name: string,
     type: CostType,
     splitType: SplitType,
-    totalLumpSum?: number
+    totalLumpSum?: number,
+    memberAmounts?: { [memberId: string]: number }
   ) => void;
 }
 
@@ -23,6 +26,7 @@ export function EditExpenseModal({
   isOpen,
   onClose,
   category,
+  members,
   language,
   onUpdateExpense,
 }: EditExpenseModalProps) {
@@ -32,6 +36,9 @@ export function EditExpenseModal({
   const [lumpSum, setLumpSum] = useState<string>('');
   const [error, setError] = useState<string>('');
 
+  // Track initial amounts for each member if splitType is INDIVIDUAL
+  const [memberAmounts, setMemberAmounts] = useState<{ [memberId: string]: string }>({});
+
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (category) {
@@ -39,9 +46,23 @@ export function EditExpenseModal({
       setType(category.type || 'PLUS');
       setSplitType(category.splitType || 'EQUAL');
       setLumpSum(category.totalLumpSum !== undefined ? String(category.totalLumpSum) : '');
+
+      const initialAmounts: { [memberId: string]: string } = {};
+      members.forEach((m) => {
+        const costInput = m.customCosts?.find((cc) => cc.categoryId === category.id);
+        initialAmounts[m.id] = costInput ? String(costInput.amount) : '0';
+      });
+      setMemberAmounts(initialAmounts);
     }
-  }, [category]);
+  }, [category, members]);
   /* eslint-enable react-hooks/set-state-in-effect */
+
+  const handleMemberAmountChange = (memberId: string, value: string) => {
+    setMemberAmounts((prev) => ({
+      ...prev,
+      [memberId]: value,
+    }));
+  };
 
   if (!isOpen) return null;
 
@@ -56,7 +77,14 @@ export function EditExpenseModal({
 
     const finalLumpSum = splitType === 'EQUAL' ? parseFloat(lumpSum) || 0 : undefined;
 
-    onUpdateExpense(category.id, name.trim(), type, splitType, finalLumpSum);
+    const parsedMemberAmounts: { [memberId: string]: number } = {};
+    if (splitType === 'INDIVIDUAL') {
+      members.forEach((m) => {
+        parsedMemberAmounts[m.id] = parseFloat(memberAmounts[m.id]) || 0;
+      });
+    }
+
+    onUpdateExpense(category.id, name.trim(), type, splitType, finalLumpSum, parsedMemberAmounts);
     onClose();
   };
 
@@ -70,7 +98,7 @@ export function EditExpenseModal({
               <Edit className="w-4 h-4" />
             </div>
             <h2 className="text-base font-extrabold text-zinc-800">
-              {getTranslation(language, 'editMember').replace('Member', 'Expense')}: {category.name}
+              {getTranslation(language, 'editExpense')}: {category.name}
             </h2>
           </div>
           <button
@@ -187,6 +215,41 @@ export function EditExpenseModal({
                   className="w-full pl-7 pr-3 py-2 border border-emerald-200 rounded-xl text-emerald-955 font-bold text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
+            </div>
+          )}
+
+          {splitType === 'INDIVIDUAL' && (
+            <div className="pt-3 border-t border-zinc-150 space-y-3 animate-in slide-in-from-top-1 duration-150 text-left">
+              <h3 className="text-xs font-extrabold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5" />
+                {getTranslation(language, 'initialIndividualValues')}
+              </h3>
+
+              {members.length === 0 ? (
+                <p className="text-xs text-zinc-400 italic">No members currently added to allocate dues to.</p>
+              ) : (
+                <div className="space-y-2.5 max-h-[200px] overflow-y-auto pr-1">
+                  {members.map((m) => (
+                    <div key={m.id} className="flex items-center justify-between gap-3 bg-zinc-50/70 p-2.5 rounded-xl border border-zinc-200">
+                      <span className="text-xs font-extrabold text-zinc-700 truncate">{m.name}</span>
+                      <div className="relative rounded-lg shadow-xs w-28 shrink-0">
+                        <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                          <span className="text-zinc-400 font-bold text-[10px]">৳</span>
+                        </div>
+                        <input
+                          type="number"
+                          min="0"
+                          step="any"
+                          placeholder="0.00"
+                          value={memberAmounts[m.id] || ''}
+                          onChange={(e) => handleMemberAmountChange(m.id, e.target.value)}
+                          className="w-full pl-6 pr-2.5 py-1 border border-zinc-300 rounded-lg text-zinc-855 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
