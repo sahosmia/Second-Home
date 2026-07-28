@@ -15,7 +15,8 @@ import {
   Languages,
   Sun,
   Moon,
-  Tv
+  Tv,
+  ImageIcon
 } from 'lucide-react';
 import { Language, getTranslation } from '../utils/translations';
 import { Theme } from '../hooks/useMessState';
@@ -30,6 +31,7 @@ interface HeaderProps {
   onReset: () => void;
   onClear: (isHard?: boolean) => void;
   onDownloadPDF: () => void;
+  onDownloadImage: () => void;
   theme: Theme;
   setTheme: (t: Theme) => void;
 }
@@ -44,6 +46,7 @@ export function Header({
   onReset,
   onClear,
   onDownloadPDF,
+  onDownloadImage,
   theme,
   setTheme
 }: HeaderProps) {
@@ -242,6 +245,15 @@ export function Header({
           </button>
 
           <button
+            onClick={onDownloadImage}
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-teal-400 border border-teal-500/30 hover:border-teal-400/80 rounded-xl transition-all bg-teal-500/5 hover:bg-teal-500/10 cursor-pointer active:scale-97"
+            title={language === 'bn' ? 'ছবি ডাউনলোড' : 'Download Image'}
+          >
+            <ImageIcon className="w-3.5 h-3.5" />
+            <span>{language === 'bn' ? 'ছবি ডাউনলোড' : 'Download Image'}</span>
+          </button>
+
+          <button
             onClick={() => handleOpenModal('reset')}
             className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-zinc-300 border border-zinc-700/60 hover:border-zinc-500 rounded-xl transition-all hover:bg-zinc-800 cursor-pointer active:scale-97"
             title={getTranslation(language, 'requestDemo')}
@@ -314,6 +326,17 @@ export function Header({
             >
               <Download className="w-4 h-4 text-emerald-400" />
               {getTranslation(language, 'downloadSummary')}
+            </button>
+
+            <button
+              onClick={() => {
+                onDownloadImage();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-teal-500/20 bg-teal-500/5 hover:bg-teal-500/10 text-teal-400 text-xs font-bold transition-all"
+            >
+              <ImageIcon className="w-4 h-4 text-teal-400" />
+              {language === 'bn' ? 'ছবি ডাউনলোড করুন' : 'Download Image'}
             </button>
 
             <button
