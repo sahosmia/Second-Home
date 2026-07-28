@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { MessCalculationSummary } from '../utils/calculations';
 import { Member, CostCategory } from '../types';
-import { ShoppingBag, Utensils, Award, TrendingUp, TrendingDown, Edit2, Trash2, ShieldAlert, Plus } from 'lucide-react';
+import { ShoppingBag, Utensils, Award, TrendingUp, TrendingDown, Edit2, Trash2, ShieldAlert, Plus, Wallet } from 'lucide-react';
 import { EditMemberModal } from './EditMemberModal';
 import { Language, getTranslation } from '../utils/translations';
 
@@ -31,7 +31,7 @@ export function SummaryDashboard({
   onRemoveMember,
   onUpdateMemberFull,
 }: SummaryDashboardProps) {
-  const { totalBazaar, totalMeals, currentMealRate, results } = summary;
+  const { totalBazaar, totalMeals, currentMealRate, results, totalExpenses } = summary;
 
   const [mounted, setMounted] = useState<boolean>(false);
   
@@ -70,8 +70,8 @@ export function SummaryDashboard({
 
   return (
     <section className="space-y-6 print:hidden">
-      {/* 3-Column Top KPI Grid (Highly Responsive & Space-saving on Mobile) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6">
+      {/* 4-Column Top KPI Grid (Highly Responsive & Space-saving on Mobile) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {/* Total Bazaar */}
         <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-2.5 sm:p-6 flex items-center gap-2.5 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 col-span-1">
           <div className="p-1.5 sm:p-4 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg sm:rounded-xl shrink-0">
@@ -105,7 +105,7 @@ export function SummaryDashboard({
         </div>
 
         {/* Current Meal Rate */}
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-2.5 sm:p-6 flex items-center gap-2.5 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 relative overflow-hidden col-span-2 sm:col-span-1">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-2.5 sm:p-6 flex items-center gap-2.5 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 col-span-1">
           <div className="p-1.5 sm:p-4 bg-emerald-600/10 text-emerald-700 dark:text-emerald-300 rounded-lg sm:rounded-xl shrink-0">
             <Award className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
@@ -118,6 +118,22 @@ export function SummaryDashboard({
             </h3>
             <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5 font-medium truncate hidden sm:block">
               {getTranslation(language, 'bazaarMeals')}
+            </p>
+          </div>
+        </div>
+
+        {/* Total Expenses */}
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-2.5 sm:p-6 flex items-center gap-2.5 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 col-span-1">
+          <div className="p-1.5 sm:p-4 bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-lg sm:rounded-xl shrink-0">
+            <Wallet className="w-4 h-4 sm:w-6 sm:h-6" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-[8px] sm:text-xs font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-wider truncate">
+              {getTranslation(language, 'totalExpenses')}
+            </p>
+            <h3 className="text-xs sm:text-2xl font-black text-zinc-900 dark:text-white mt-0.5 sm:mt-1 truncate">৳{totalExpenses.toFixed(0)}</h3>
+            <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5 font-medium truncate hidden sm:block">
+              {language === 'bn' ? 'মেসের মোট হিসাবকৃত খরচ' : 'Total calculated mess costs'}
             </p>
           </div>
         </div>

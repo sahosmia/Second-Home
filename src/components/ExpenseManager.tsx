@@ -6,7 +6,9 @@ import { Trash, Settings, DollarSign, Plus, UserMinus, UserCheck, Edit2 } from '
 
 import { Language, getTranslation } from '../utils/translations';
 import { EditExpenseModal } from './EditExpenseModal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { ShieldAlert } from 'lucide-react';
 
 interface ExpenseManagerProps {
   categories: CostCategory[];
@@ -37,7 +39,15 @@ export function ExpenseManager({
   onToggleExclusion,
 }: ExpenseManagerProps) {
   const [editingCategory, setEditingCategory] = useState<CostCategory | null>(null);
+  const [deletingCategory, setDeletingCategory] = useState<CostCategory | null>(null);
   const [expandedExpenses, setExpandedExpenses] = useState<{[id: string]: boolean}>({});
+  const [mounted, setMounted] = useState<boolean>(false);
+
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const toggleExpenseDetails = (id: string) => {
     setExpandedExpenses((prev) => ({
@@ -95,6 +105,13 @@ export function ExpenseManager({
               // Calculate shares dynamically
               const activeCount = members.filter((m) => !excludedIds.includes(m.id)).length;
               const shareAmount = isEqual && activeCount > 0 ? (cat.totalLumpSum || 0) / activeCount : 0;
+
+              const totalIndividualAmount = members.reduce((sum, m) => {
+                const costInput = m.customCosts?.find((cc) => cc.categoryId === cat.id);
+                return sum + (costInput ? costInput.amount : 0);
+              }, 0);
+
+              const totalAmount = isEqual ? (cat.totalLumpSum || 0) : totalIndividualAmount;
 
               return (
                 <div
@@ -156,8 +173,8 @@ export function ExpenseManager({
                         </button>
                         <button
                           type="button"
-                          onClick={() => onRemoveCategory(cat.id)}
-                          className="p-1 text-zinc-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-zinc-800 rounded-md transition-all cursor-pointer border border-transparent hover:border-rose-100 dark:hover:border-zinc-700"
+                          onClick={() => setDeletingCategory(cat)}
+                          className="p-1 text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-zinc-800 rounded-md transition-all cursor-pointer border border-transparent hover:border-rose-100 dark:hover:border-zinc-700"
                           title="Delete category"
                         >
                           <Trash className="w-3 h-3" />
@@ -169,17 +186,11 @@ export function ExpenseManager({
                     <div className="mt-4 flex items-end justify-between gap-2">
                       <div>
                         <p className="text-[9px] font-extrabold text-zinc-450 dark:text-zinc-555 uppercase tracking-wider">
-                          {isEqual ? getTranslation(language, 'totalCost') : getTranslation(language, 'splitMode')}
+                          {getTranslation(language, 'totalCost')} {!isEqual && `(${getTranslation(language, 'individualSplitLabel')})`}
                         </p>
-                        {isEqual ? (
-                          <h5 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white tracking-tight mt-0.5">
-                            ৳{(cat.totalLumpSum || 0).toFixed(0)}
-                          </h5>
-                        ) : (
-                          <h5 className="text-sm font-bold text-zinc-650 dark:text-zinc-350 tracking-tight mt-1 bg-zinc-50 dark:bg-zinc-950 px-2 py-1 rounded-lg border border-zinc-150 dark:border-zinc-850">
-                            {getTranslation(language, 'customInput')}
-                          </h5>
-                        )}
+                        <h5 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white tracking-tight mt-0.5">
+                          ৳{totalAmount.toFixed(0)}
+                        </h5>
                       </div>
 
                       {/* Details toggler */}
@@ -281,6 +292,44 @@ export function ExpenseManager({
           language={language}
           onUpdateExpense={onUpdateCategory}
         />
+      )}
+
+      {mounted && deletingCategory && createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-fade-in">
+          <div className="bg-zinc-955 border border-zinc-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl transition-all scale-100 duration-200 text-zinc-100 text-left">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2.5 bg-rose-500/10 text-rose-500 rounded-xl">
+                <ShieldAlert className="w-6 h-6 animate-bounce" />
+              </div>
+              <h2 className="text-lg font-extrabold text-white">
+                {getTranslation(language, 'deleteExpenseTitle')}
+              </h2>
+            </div>
+
+            <p className="text-sm text-zinc-400 leading-relaxed mb-6">
+              {getTranslation(language, 'deleteExpenseConfirm', { name: deletingCategory.name })}
+            </p>
+
+            <div className="flex items-center justify-end gap-2.5">
+              <button
+                onClick={() => setDeletingCategory(null)}
+                className="flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-400 hover:text-white border border-zinc-800 hover:bg-zinc-900 rounded-xl transition-all cursor-pointer text-center"
+              >
+                {getTranslation(language, 'cancel')}
+              </button>
+              <button
+                onClick={() => {
+                  onRemoveCategory(deletingCategory.id);
+                  setDeletingCategory(null);
+                }}
+                className="flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-rose-600 hover:bg-rose-500 rounded-xl shadow-md shadow-rose-600/15 transition-all cursor-pointer active:scale-95 text-center"
+              >
+                {getTranslation(language, 'yesDelete')}
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
       )}
     </section>
   );
