@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Member, CostCategory, MemberCostInput } from '../types';
+import { Member, CostCategory, MemberCostInput, CostType, SplitType } from '../types';
+import { Language } from '../utils/translations';
 
 // High-fidelity preloaded default mock data
 const DEFAULT_CATEGORIES: CostCategory[] = [
@@ -67,6 +68,7 @@ export function useMessState() {
     return `${year}-${month}`;
   };
   const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonthYear());
+  const [language, setLanguage] = useState<Language>('bn');
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   // Hook beforeunload to prevent accidental browser refresh or page close
@@ -90,12 +92,16 @@ export function useMessState() {
       const savedMembers = localStorage.getItem('second_home_members');
       const savedMessName = localStorage.getItem('second_home_messName');
       const savedSelectedMonth = localStorage.getItem('second_home_selectedMonth');
+      const savedLanguage = localStorage.getItem('second_home_language');
 
       /* eslint-disable react-hooks/set-state-in-effect */
       if (savedCategories) setCategories(JSON.parse(savedCategories));
       if (savedMembers) setMembers(JSON.parse(savedMembers));
       if (savedMessName) setMessName(savedMessName);
       if (savedSelectedMonth) setSelectedMonth(savedSelectedMonth);
+      if (savedLanguage === 'en' || savedLanguage === 'bn') {
+        setLanguage(savedLanguage as Language);
+      }
       /* eslint-enable react-hooks/set-state-in-effect */
     } catch (e) {
       console.error('Failed to load from localStorage', e);
@@ -146,6 +152,15 @@ export function useMessState() {
     }
   }, [selectedMonth, isLoaded]);
 
+  useEffect(() => {
+    if (!isLoaded) return;
+    try {
+      localStorage.setItem('second_home_language', language);
+    } catch (e) {
+      console.error('Failed to save language to localStorage', e);
+    }
+  }, [language, isLoaded]);
+
   // Category Management Operations
   const addCategory = (
     category: Omit<CostCategory, 'id'>,
@@ -183,6 +198,51 @@ export function useMessState() {
     setCategories((prev) =>
       prev.map((cat) => (cat.id === id ? { ...cat, totalLumpSum } : cat))
     );
+  };
+
+  const updateCategory = (
+    id: string,
+    name: string,
+    type: CostType,
+    splitType: SplitType,
+    totalLumpSum?: number,
+    memberAmounts?: { [memberId: string]: number }
+  ) => {
+    setCategories((prev) =>
+      prev.map((cat) =>
+        cat.id === id
+          ? {
+              ...cat,
+              name,
+              type,
+              splitType,
+              totalLumpSum: splitType === 'EQUAL' ? totalLumpSum : undefined,
+            }
+          : cat
+      )
+    );
+
+    // If splitType is INDIVIDUAL and memberAmounts are provided, update custom costs for all members
+    if (splitType === 'INDIVIDUAL' && memberAmounts) {
+      setMembers((prevMembers) =>
+        prevMembers.map((member) => {
+          const newAmount = memberAmounts[member.id] ?? 0;
+          const exists = member.customCosts.some((cc) => cc.categoryId === id);
+          let newCosts;
+          if (exists) {
+            newCosts = member.customCosts.map((cc) =>
+              cc.categoryId === id ? { ...cc, amount: newAmount } : cc
+            );
+          } else {
+            newCosts = [...member.customCosts, { categoryId: id, amount: newAmount }];
+          }
+          return {
+            ...member,
+            customCosts: newCosts,
+          };
+        })
+      );
+    }
   };
 
   const toggleCategoryMemberExclusion = (categoryId: string, memberId: string) => {
@@ -342,8 +402,11 @@ export function useMessState() {
     setMessName,
     selectedMonth,
     setSelectedMonth,
+    language,
+    setLanguage,
     addCategory,
     removeCategory,
+    updateCategory,
     updateCategoryLumpSum,
     toggleCategoryMemberExclusion,
     addMember,

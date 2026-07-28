@@ -4,24 +4,28 @@ import React, { useState } from 'react';
 import { X, HelpCircle, PlusCircle, Settings, Users } from 'lucide-react';
 import { CostCategory, CostType, SplitType, Member } from '../types';
 
-interface AddCategoryModalProps {
+import { Language, getTranslation } from '../utils/translations';
+
+interface AddExpenseModalProps {
   isOpen: boolean;
   onClose: () => void;
   categories: CostCategory[];
   members: Member[];
-  onAddCategory: (
+  language: Language;
+  onAddExpense: (
     category: Omit<CostCategory, 'id'>,
     initialMemberAmounts?: { [memberId: string]: number }
   ) => void;
 }
 
-export function AddCategoryModal({
+export function AddExpenseModal({
   isOpen,
   onClose,
   categories,
   members,
-  onAddCategory,
-}: AddCategoryModalProps) {
+  language,
+  onAddExpense,
+}: AddExpenseModalProps) {
   const [name, setName] = useState<string>('');
   const [type, setType] = useState<CostType>('PLUS');
   const [splitType, setSplitType] = useState<SplitType>('EQUAL');
@@ -70,7 +74,7 @@ export function AddCategoryModal({
       });
     }
 
-    onAddCategory({
+    onAddExpense({
       name: trimmedName,
       type,
       splitType,
@@ -81,15 +85,15 @@ export function AddCategoryModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-      <div className="bg-white border border-zinc-200 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-scale-in max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in" onClick={onClose}>
+      <div className="bg-white border border-zinc-200 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-scale-in max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="bg-zinc-50 border-b border-zinc-150 px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <div className="p-1.5 bg-emerald-500/10 text-emerald-600 rounded-lg">
               <Settings className="w-4 h-4" />
             </div>
-            <h2 className="text-base font-extrabold text-zinc-800">Add Custom Category</h2>
+            <h2 className="text-base font-extrabold text-zinc-800">{getTranslation(language, 'addCustomCategory')}</h2>
           </div>
           <button
             onClick={onClose}
@@ -102,14 +106,14 @@ export function AddCategoryModal({
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1">
           {error && (
-            <p className="p-2.5 bg-rose-50 border border-rose-100 text-rose-600 text-xs font-bold rounded-xl">
+            <p className="p-2.5 bg-rose-50 border border-rose-100 text-rose-600 text-xs font-bold rounded-xl text-left">
               {error}
             </p>
           )}
 
-          <div>
+          <div className="text-left">
             <label htmlFor="modal-cat-name" className="block text-xs font-bold text-zinc-600 uppercase mb-1.5">
-              Category Name
+              {getTranslation(language, 'categoryName')}
             </label>
             <input
               id="modal-cat-name"
@@ -121,20 +125,20 @@ export function AddCategoryModal({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 text-left">
             <div>
               <label className="block text-xs font-bold text-zinc-600 uppercase mb-1.5 flex items-center gap-1" title="PLUS (+): Added to member costs. MINUS (-): Subtracted from member costs.">
-                Type
+                {getTranslation(language, 'categoryType')}
                 <HelpCircle className="w-3.5 h-3.5 text-zinc-400" />
               </label>
-              <div className="flex rounded-xl border border-zinc-200 p-0.5 bg-zinc-50 text-xs font-bold">
+              <div className="flex rounded-xl border border-zinc-200 p-0.5 bg-zinc-50 text-[10px] font-bold">
                 <button
                   type="button"
                   onClick={() => setType('PLUS')}
                   className={`flex-1 py-2 text-center rounded-lg transition-all cursor-pointer ${
                     type === 'PLUS'
-                      ? 'bg-emerald-500 text-white shadow-xs'
-                      : 'text-zinc-600 hover:text-zinc-900'
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'text-zinc-500 hover:text-zinc-800'
                   }`}
                 >
                   PLUS
@@ -144,8 +148,8 @@ export function AddCategoryModal({
                   onClick={() => setType('MINUS')}
                   className={`flex-1 py-2 text-center rounded-lg transition-all cursor-pointer ${
                     type === 'MINUS'
-                      ? 'bg-rose-550 text-white shadow-xs'
-                      : 'text-zinc-600 hover:text-zinc-900'
+                      ? 'bg-rose-600 text-white shadow-sm'
+                      : 'text-zinc-500 hover:text-zinc-800'
                   }`}
                 >
                   MINUS
@@ -155,17 +159,17 @@ export function AddCategoryModal({
 
             <div>
               <label className="block text-xs font-bold text-zinc-600 uppercase mb-1.5 flex items-center gap-1" title="EQUAL: Divided evenly among all members. INDIVIDUAL: Input custom value for each member.">
-                Split
+                {getTranslation(language, 'splitTypeLabel')}
                 <HelpCircle className="w-3.5 h-3.5 text-zinc-400" />
               </label>
-              <div className="flex rounded-xl border border-zinc-200 p-0.5 bg-zinc-50 text-xs font-bold">
+              <div className="flex rounded-xl border border-zinc-200 p-0.5 bg-zinc-50 text-[10px] font-bold">
                 <button
                   type="button"
                   onClick={() => setSplitType('EQUAL')}
                   className={`flex-1 py-2 text-center rounded-lg transition-all cursor-pointer ${
                     splitType === 'EQUAL'
-                      ? 'bg-zinc-800 text-white shadow-xs'
-                      : 'text-zinc-600 hover:text-zinc-900'
+                      ? 'bg-zinc-800 text-white shadow-sm'
+                      : 'text-zinc-500 hover:text-zinc-800'
                   }`}
                 >
                   EQUAL
@@ -175,8 +179,8 @@ export function AddCategoryModal({
                   onClick={() => setSplitType('INDIVIDUAL')}
                   className={`flex-1 py-2 text-center rounded-lg transition-all cursor-pointer ${
                     splitType === 'INDIVIDUAL'
-                      ? 'bg-zinc-800 text-white shadow-xs'
-                      : 'text-zinc-600 hover:text-zinc-900'
+                      ? 'bg-zinc-800 text-white shadow-sm'
+                      : 'text-zinc-500 hover:text-zinc-800'
                   }`}
                 >
                   INDIV
@@ -186,9 +190,9 @@ export function AddCategoryModal({
           </div>
 
           {splitType === 'EQUAL' && (
-            <div className="bg-emerald-50/50 p-4 border border-emerald-100 rounded-2xl animate-in slide-in-from-top-1 duration-150">
+            <div className="bg-emerald-50/50 p-4 border border-emerald-100 rounded-2xl animate-in slide-in-from-top-1 duration-150 text-left">
               <label htmlFor="modal-lump-sum" className="block text-xs font-bold text-emerald-800 uppercase mb-1.5">
-                Total Lump Sum Amount (৳)
+                {getTranslation(language, 'defaultLumpSum')}
               </label>
               <div className="relative rounded-xl shadow-xs">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -212,10 +216,10 @@ export function AddCategoryModal({
           )}
 
           {splitType === 'INDIVIDUAL' && (
-            <div className="pt-3 border-t border-zinc-150 space-y-3 animate-in slide-in-from-top-1 duration-150">
+            <div className="pt-3 border-t border-zinc-150 space-y-3 animate-in slide-in-from-top-1 duration-150 text-left">
               <h3 className="text-xs font-extrabold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5" />
-                Initial Per-Member Allocation
+                {getTranslation(language, 'initialIndividualValues')}
               </h3>
 
               {members.length === 0 ? (
@@ -250,16 +254,16 @@ export function AddCategoryModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-500 hover:text-zinc-855 border border-zinc-300 hover:bg-zinc-50 rounded-xl transition-all cursor-pointer"
+              className="flex-1 px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-500 hover:text-zinc-855 border border-zinc-300 hover:bg-zinc-50 rounded-xl transition-all cursor-pointer text-center"
             >
-              Cancel
+              {getTranslation(language, 'cancel')}
             </button>
             <button
               type="submit"
-              className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl shadow-md shadow-emerald-600/10 transition-all cursor-pointer active:scale-95"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl shadow-md shadow-emerald-600/10 transition-all cursor-pointer active:scale-95 text-center"
             >
               <PlusCircle className="w-4 h-4" />
-              Add Category
+              {getTranslation(language, 'addCategory')}
             </button>
           </div>
         </form>

@@ -11,14 +11,18 @@ import {
   Check,
   Calendar,
   Menu,
-  X
+  X,
+  Languages
 } from 'lucide-react';
+import { Language, getTranslation } from '../utils/translations';
 
 interface HeaderProps {
   messName: string;
   setMessName: (name: string) => void;
   selectedMonth: string;
   setSelectedMonth: (month: string) => void;
+  language: Language;
+  setLanguage: (lang: Language) => void;
   onReset: () => void;
   onClear: (isHard?: boolean) => void;
   onDownloadPDF: () => void;
@@ -29,6 +33,8 @@ export function Header({
   setMessName,
   selectedMonth,
   setSelectedMonth,
+  language,
+  setLanguage,
   onReset,
   onClear,
   onDownloadPDF
@@ -158,12 +164,24 @@ export function Header({
                 <Edit2 className="w-3 h-3 text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             )}
-            <p className="text-[10px] text-zinc-400 font-semibold tracking-wide">Monthly Bachelor Mess Tracker</p>
+            <p className="text-[10px] text-zinc-400 font-semibold tracking-wide">
+              {getTranslation(language, 'subBrandName')}
+            </p>
           </div>
         </div>
 
         {/* Month Selector Dropdown & Action Controls (Desktop View) */}
         <div className="hidden md:flex items-center gap-3">
+          {/* Language Selector Button */}
+          <button
+            onClick={() => setLanguage(language === 'bn' ? 'en' : 'bn')}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-zinc-300 border border-zinc-700/60 hover:border-emerald-500/50 rounded-xl transition-all hover:bg-zinc-800 cursor-pointer active:scale-97"
+            title="ভাষা পরিবর্তন করুন / Change Language"
+          >
+            <Languages className="w-3.5 h-3.5 text-emerald-400" />
+            <span>{language === 'bn' ? 'English' : 'বাংলা'}</span>
+          </button>
+
           {/* Month Dropdown Selector */}
           <div className="flex items-center gap-2 bg-zinc-800/80 border border-zinc-700/60 rounded-xl px-3 py-1.5 text-xs text-zinc-300 focus-within:border-emerald-500 transition-all">
             <Calendar className="w-3.5 h-3.5 text-emerald-400" />
@@ -184,33 +202,40 @@ export function Header({
           <button
             onClick={onDownloadPDF}
             className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-emerald-400 border border-emerald-500/30 hover:border-emerald-400/80 rounded-xl transition-all bg-emerald-500/5 hover:bg-emerald-500/10 cursor-pointer active:scale-97"
-            title="Download PDF Summary Report"
+            title={getTranslation(language, 'downloadSummary')}
           >
             <Download className="w-3.5 h-3.5" />
-            <span>Download Summary</span>
+            <span>{getTranslation(language, 'downloadSummary')}</span>
           </button>
 
           <button
             onClick={() => handleOpenModal('reset')}
             className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-zinc-300 border border-zinc-700/60 hover:border-zinc-500 rounded-xl transition-all hover:bg-zinc-800 cursor-pointer active:scale-97"
-            title="Restore default demo examples"
+            title={getTranslation(language, 'requestDemo')}
           >
             <RotateCcw className="w-3.5 h-3.5 text-zinc-400" />
-            <span>Request Demo</span>
+            <span>{getTranslation(language, 'requestDemo')}</span>
           </button>
 
           <button
             onClick={() => handleOpenModal('clear')}
             className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-400 border border-rose-500/30 hover:border-rose-400/80 rounded-xl transition-all bg-rose-500/5 hover:bg-rose-500/10 cursor-pointer active:scale-97"
-            title="Clear all mess data"
+            title={getTranslation(language, 'clearAll')}
           >
             <Trash2 className="w-3.5 h-3.5" />
-            <span>Clear All</span>
+            <span>{getTranslation(language, 'clearAll')}</span>
           </button>
         </div>
 
         {/* Hamburger Menu Icon for Mobile */}
         <div className="flex md:hidden items-center gap-2">
+          {/* Quick Language Toggle on Mobile Header */}
+          <button
+            onClick={() => setLanguage(language === 'bn' ? 'en' : 'bn')}
+            className="p-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 text-[11px] font-bold"
+          >
+            {language === 'bn' ? 'EN' : 'বাং'}
+          </button>
           {/* Calendar Select also shown on mobile header directly for easy accessibility */}
           <div className="flex items-center gap-1 bg-zinc-800 border border-zinc-700 rounded-lg px-2 py-1 text-[11px] text-zinc-300">
             <select
@@ -247,7 +272,7 @@ export function Header({
               className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-400 text-xs font-bold transition-all"
             >
               <Download className="w-4 h-4 text-emerald-400" />
-              Download Summary PDF
+              {getTranslation(language, 'downloadSummary')}
             </button>
 
             <button
@@ -255,7 +280,7 @@ export function Header({
               className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-zinc-800 bg-zinc-900/40 hover:bg-zinc-900 text-zinc-300 text-xs font-bold transition-all"
             >
               <RotateCcw className="w-4 h-4 text-zinc-400" />
-              Request Demo Template
+              {getTranslation(language, 'requestDemo')}
             </button>
 
             <button
@@ -263,7 +288,7 @@ export function Header({
               className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/10 text-rose-400 text-xs font-bold transition-all"
             >
               <Trash2 className="w-4 h-4 text-rose-450" />
-              Clear All Ledger Data
+              {getTranslation(language, 'clearAll')}
             </button>
           </div>
         </div>
@@ -278,19 +303,19 @@ export function Header({
                 {modalAction === 'reset' ? <RotateCcw className="w-6 h-6" /> : <Trash2 className="w-6 h-6" />}
               </div>
               <h2 className="text-lg font-extrabold text-white">
-                {modalAction === 'reset' ? 'Restore Template Demo?' : 'Erase All Mess Ledger?'}
+                {modalAction === 'reset' ? getTranslation(language, 'restoreTemplate') : getTranslation(language, 'eraseAllLedger')}
               </h2>
             </div>
             
             <div className="text-sm text-zinc-400 leading-relaxed mb-6">
               {modalAction === 'reset' ? (
-                'This will overwrite your current configurations and restore our fully pre-filled bachelor mess example. Any custom updates in progress will be replaced.'
+                getTranslation(language, 'restoreTemplateBody')
               ) : (
                 <div className="space-y-4">
                   <p className="font-medium text-zinc-200">
-                    Are you sure to reset all values to 0?
+                    {getTranslation(language, 'resetMessage')}
                   </p>
-                  <label className="flex items-center gap-3 bg-zinc-900 hover:bg-zinc-800 p-3 rounded-xl border border-zinc-800 cursor-pointer select-none transition-colors">
+                  <label className="flex items-center gap-3 bg-zinc-900 hover:bg-zinc-800 p-3 rounded-xl border border-zinc-800 cursor-pointer select-none transition-colors text-left">
                     <input
                       type="checkbox"
                       checked={isHardResetChecked}
@@ -298,7 +323,7 @@ export function Header({
                       className="w-4.5 h-4.5 accent-rose-500 rounded border-zinc-700 bg-zinc-950 focus:ring-rose-500 text-rose-500 cursor-pointer"
                     />
                     <span className="text-xs text-zinc-300 font-semibold leading-tight">
-                      Hard Reset (Delete members, categories, and clear local storage)
+                      {getTranslation(language, 'hardResetCheckbox')}
                     </span>
                   </label>
                 </div>
@@ -308,19 +333,19 @@ export function Header({
             <div className="flex items-center justify-end gap-2.5">
               <button
                 onClick={() => setShowConfirmModal(false)}
-                className="flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-400 hover:text-white border border-zinc-800 hover:bg-zinc-900 rounded-xl transition-all cursor-pointer"
+                className="flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-400 hover:text-white border border-zinc-800 hover:bg-zinc-900 rounded-xl transition-all cursor-pointer text-center"
               >
-                No, Go Back
+                {getTranslation(language, 'noGoBack')}
               </button>
               <button
                 onClick={handleConfirm}
-                className={`flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-semibold text-white rounded-xl shadow-md transition-all cursor-pointer active:scale-95 ${
+                className={`flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-semibold text-white rounded-xl shadow-md transition-all cursor-pointer active:scale-95 text-center ${
                   modalAction === 'reset'
                     ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/10'
                     : 'bg-rose-600 hover:bg-rose-500 shadow-rose-600/10'
                 }`}
               >
-                Yes, Confirm
+                {getTranslation(language, 'yesConfirm')}
               </button>
             </div>
           </div>

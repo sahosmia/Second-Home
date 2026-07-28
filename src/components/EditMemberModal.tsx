@@ -4,11 +4,14 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { X, Save, Edit, HelpCircle } from 'lucide-react';
 import { CostCategory, Member } from '../types';
 
+import { Language, getTranslation } from '../utils/translations';
+
 interface EditMemberModalProps {
   isOpen: boolean;
   onClose: () => void;
   categories: CostCategory[];
   member: Member;
+  language: Language;
   onUpdateMember: (
     id: string,
     name: string,
@@ -23,6 +26,7 @@ export function EditMemberModal({
   onClose,
   categories,
   member,
+  language,
   onUpdateMember,
 }: EditMemberModalProps) {
   const [name, setName] = useState<string>('');
@@ -85,8 +89,8 @@ export function EditMemberModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-      <div className="bg-white border border-zinc-200 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-scale-in max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in" onClick={onClose}>
+      <div className="bg-white border border-zinc-200 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-scale-in max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
         {/* Modal Header */}
         <div className="bg-zinc-50 border-b border-zinc-150 px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
@@ -94,7 +98,7 @@ export function EditMemberModal({
               <Edit className="w-4 h-4" />
             </div>
             <h2 className="text-base font-extrabold text-zinc-800 flex items-center gap-1.5">
-              Edit Member: {member.name}
+              {getTranslation(language, 'editMember')}: {member.name}
             </h2>
           </div>
           <button
@@ -108,14 +112,14 @@ export function EditMemberModal({
         {/* Modal Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1">
           {error && (
-            <p className="p-2.5 bg-rose-50 border border-rose-100 text-rose-600 text-xs font-bold rounded-xl">
+            <p className="p-2.5 bg-rose-50 border border-rose-100 text-rose-600 text-xs font-bold rounded-xl text-left">
               {error}
             </p>
           )}
 
-          <div>
+          <div className="text-left">
             <label htmlFor="edit-member-name" className="block text-xs font-bold text-zinc-600 uppercase mb-1.5">
-              Full Name
+              {getTranslation(language, 'fullName')}
             </label>
             <input
               id="edit-member-name"
@@ -127,10 +131,10 @@ export function EditMemberModal({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 text-left">
             <div>
               <label htmlFor="edit-member-bazaar" className="block text-xs font-bold text-zinc-600 uppercase mb-1.5">
-                Bazaar Deposit (৳)
+                {getTranslation(language, 'bazaarDepositInput')}
               </label>
               <input
                 id="edit-member-bazaar"
@@ -146,7 +150,7 @@ export function EditMemberModal({
 
             <div>
               <label htmlFor="edit-member-meals" className="block text-xs font-bold text-zinc-600 uppercase mb-1.5">
-                Meals Eaten
+                {getTranslation(language, 'mealsEatenInput')}
               </label>
               <input
                 id="edit-member-meals"
@@ -163,9 +167,9 @@ export function EditMemberModal({
 
           {/* Individual split category dynamic inputs */}
           {individualCategories.length > 0 && (
-            <div className="pt-3 border-t border-zinc-150 space-y-3">
+            <div className="pt-3 border-t border-zinc-150 space-y-3 text-left">
               <h3 className="text-xs font-extrabold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
-                Individual Custom Fees / Adjustments
+                {getTranslation(language, 'customFeesHeader')}
                 <span title="Amounts specific to this member">
                   <HelpCircle className="w-3.5 h-3.5 text-zinc-300" />
                 </span>
@@ -205,16 +209,16 @@ export function EditMemberModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-500 hover:text-zinc-800 border border-zinc-300 hover:bg-zinc-50 rounded-xl transition-all cursor-pointer"
+              className="flex-1 px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-500 hover:text-zinc-800 border border-zinc-300 hover:bg-zinc-50 rounded-xl transition-all cursor-pointer text-center"
             >
-              Cancel
+              {getTranslation(language, 'cancel')}
             </button>
             <button
               type="submit"
-              className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl shadow-md shadow-emerald-600/10 transition-all cursor-pointer active:scale-95"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl shadow-md shadow-emerald-600/10 transition-all cursor-pointer active:scale-95 text-center"
             >
               <Save className="w-4 h-4" />
-              Save Changes
+              {getTranslation(language, 'saveChanges')}
             </button>
           </div>
         </form>
