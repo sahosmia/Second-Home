@@ -205,12 +205,12 @@ export function generateMessImage(
   // Attribution & Help text
   ctx.fillStyle = '#71717a'; // Zinc 500
   ctx.font = '600 11px sans-serif';
-  ctx.fillText('any help or contract us:', 40, currentY);
+  ctx.fillText('Need help? Contact us:', 40, currentY);
 
   ctx.fillStyle = '#10b981'; // Emerald 500
   ctx.font = 'bold 11px sans-serif';
-  ctx.fillText('https://www.linkedin.com/in/sahosmia/', 185, currentY);
-  ctx.fillText('https://www.facebook.com/sahosridoy', 435, currentY);
+  ctx.fillText('https://www.linkedin.com/in/sahosmia/', 170, currentY);
+  ctx.fillText('https://www.facebook.com/sahosridoy', 420, currentY);
 
   ctx.fillStyle = '#71717a';
   ctx.font = '600 10px sans-serif';

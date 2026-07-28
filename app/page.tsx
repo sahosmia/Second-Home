@@ -127,7 +127,7 @@ export default function Home() {
       <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 py-6 mt-12 print:hidden shrink-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-3 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
           <div className="flex items-center gap-3">
-            <span>any help or contract us</span>
+            <span>Need help? Contact us:</span>
             <a
               href="https://www.linkedin.com/in/sahosmia/"
               target="_blank"
