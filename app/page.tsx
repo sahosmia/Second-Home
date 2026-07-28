@@ -9,7 +9,6 @@ import { ExpenseManager } from '../src/components/ExpenseManager';
 import { AddMemberModal } from '../src/components/AddMemberModal';
 import { AddExpenseModal } from '../src/components/AddExpenseModal';
 import { generateMessPDF } from '../src/utils/pdfGenerator';
-import { Heart } from 'lucide-react';
 import { getTranslation } from '../src/utils/translations';
 
 export default function Home() {
@@ -25,7 +24,6 @@ export default function Home() {
     addCategory,
     removeCategory,
     updateCategory,
-    updateCategoryLumpSum,
     toggleCategoryMemberExclusion,
     addMember,
     removeMember,
@@ -33,6 +31,8 @@ export default function Home() {
     resetToDefault,
     isLoaded,
     updateMemberFull,
+    theme,
+    setTheme,
   } = useMessState();
 
   // Modal open states
@@ -67,7 +67,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex flex-col font-sans text-zinc-900 selection:bg-emerald-500 selection:text-white transition-colors">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col font-sans text-zinc-900 dark:text-zinc-100 selection:bg-emerald-500 selection:text-white transition-colors">
       {/* SaaS Interactive Header Controls */}
       <Header
         messName={messName}
@@ -79,16 +79,18 @@ export default function Home() {
         onReset={resetToDefault}
         onClear={clearAllData}
         onDownloadPDF={handleDownloadPDF}
+        theme={theme}
+        setTheme={setTheme}
       />
 
       {/* Main Responsive Body Grid */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-4 sm:py-8 sm:px-6 lg:px-8 space-y-6 sm:space-y-8 print:hidden">
         {/* Intro Branding */}
         <div className="space-y-1 sm:space-y-1.5">
-          <h2 className="text-xl sm:text-2xl font-extrabold text-zinc-900 tracking-tight text-center sm:text-left">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight text-center sm:text-left">
             {getTranslation(language, 'instantCalculator')}
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-500 max-w-2xl font-medium hidden sm:block">
+          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 max-w-2xl font-medium hidden sm:block">
             {getTranslation(language, 'brandingSub')}
           </p>
         </div>
@@ -111,18 +113,23 @@ export default function Home() {
           onOpenAddCategoryModal={() => setIsCategoryModalOpen(true)}
           onRemoveCategory={removeCategory}
           onUpdateCategory={updateCategory}
-          onUpdateLumpSum={updateCategoryLumpSum}
           onToggleExclusion={toggleCategoryMemberExclusion}
         />
       </main>
 
       {/* Elegant attributions footer as requested */}
-      <footer className="border-t border-zinc-200 bg-white py-6 mt-12 print:hidden shrink-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-zinc-500">
-          <div className="flex items-center gap-1">
-            <span>{getTranslation(language, 'designedBy')}</span>
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
-            <span>by <strong className="text-zinc-800">Jules Software</strong></span>
+      <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 py-6 mt-12 print:hidden shrink-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+          <div className="flex items-center gap-1.5">
+            <span>Design and Develop by</span>
+            <a
+              href="https://www.facebook.com/sahosridoy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-600 dark:text-emerald-400 hover:underline font-extrabold"
+            >
+              Sahos Mia
+            </a>
           </div>
           <div>
             <span>{getTranslation(language, 'brandName')} Mess Engine v1.3</span>

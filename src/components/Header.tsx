@@ -12,9 +12,13 @@ import {
   Calendar,
   Menu,
   X,
-  Languages
+  Languages,
+  Sun,
+  Moon,
+  Tv
 } from 'lucide-react';
 import { Language, getTranslation } from '../utils/translations';
+import { Theme } from '../hooks/useMessState';
 
 interface HeaderProps {
   messName: string;
@@ -26,6 +30,8 @@ interface HeaderProps {
   onReset: () => void;
   onClear: (isHard?: boolean) => void;
   onDownloadPDF: () => void;
+  theme: Theme;
+  setTheme: (t: Theme) => void;
 }
 
 export function Header({
@@ -37,7 +43,9 @@ export function Header({
   setLanguage,
   onReset,
   onClear,
-  onDownloadPDF
+  onDownloadPDF,
+  theme,
+  setTheme
 }: HeaderProps) {
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [modalAction, setModalAction] = useState<'reset' | 'clear' | null>(null);
@@ -182,6 +190,31 @@ export function Header({
             <span>{language === 'bn' ? 'English' : 'বাংলা'}</span>
           </button>
 
+          {/* Theme Selector Toggle */}
+          <div className="flex bg-zinc-800/80 border border-zinc-700/60 rounded-xl p-0.5">
+            <button
+              onClick={() => setTheme('light')}
+              className={`p-1.5 rounded-lg transition-all cursor-pointer ${theme === 'light' ? 'bg-emerald-500 text-zinc-950 shadow-md' : 'text-zinc-400 hover:text-white'}`}
+              title={getTranslation(language, 'themeLight')}
+            >
+              <Sun className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setTheme('dark')}
+              className={`p-1.5 rounded-lg transition-all cursor-pointer ${theme === 'dark' ? 'bg-emerald-500 text-zinc-950 shadow-md' : 'text-zinc-400 hover:text-white'}`}
+              title={getTranslation(language, 'themeDark')}
+            >
+              <Moon className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setTheme('system')}
+              className={`p-1.5 rounded-lg transition-all cursor-pointer ${theme === 'system' ? 'bg-emerald-500 text-zinc-950 shadow-md' : 'text-zinc-400 hover:text-white'}`}
+              title={getTranslation(language, 'themeSystem')}
+            >
+              <Tv className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
           {/* Month Dropdown Selector */}
           <div className="flex items-center gap-2 bg-zinc-800/80 border border-zinc-700/60 rounded-xl px-3 py-1.5 text-xs text-zinc-300 focus-within:border-emerald-500 transition-all">
             <Calendar className="w-3.5 h-3.5 text-emerald-400" />
@@ -229,6 +262,14 @@ export function Header({
 
         {/* Hamburger Menu Icon for Mobile */}
         <div className="flex md:hidden items-center gap-2">
+          {/* Quick Theme Toggle on Mobile Header */}
+          <button
+            onClick={() => setTheme(theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light')}
+            className="p-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:text-white"
+            title="Toggle theme / থিম পরিবর্তন করুন"
+          >
+            {theme === 'light' ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : theme === 'dark' ? <Moon className="w-3.5 h-3.5 text-purple-400" /> : <Tv className="w-3.5 h-3.5 text-emerald-400" />}
+          </button>
           {/* Quick Language Toggle on Mobile Header */}
           <button
             onClick={() => setLanguage(language === 'bn' ? 'en' : 'bn')}
