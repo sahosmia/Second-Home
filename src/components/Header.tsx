@@ -16,7 +16,8 @@ import {
   Sun,
   Moon,
   Tv,
-  ImageIcon
+  ImageIcon,
+  MoreVertical
 } from 'lucide-react';
 import { Language, getTranslation } from '../utils/translations';
 import { Theme } from '../hooks/useMessState';
@@ -63,6 +64,7 @@ export function Header({
 
   // Responsive mobile menu toggle state
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [actionsMenuOpen, setActionsMenuOpen] = useState<boolean>(false);
 
   // Inline editing for Mess Name
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
@@ -234,42 +236,78 @@ export function Header({
             </select>
           </div>
 
-          {/* Icon-First Action Button Group */}
-          <button
-            onClick={onDownloadPDF}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-emerald-400 border border-emerald-500/30 hover:border-emerald-400/80 rounded-xl transition-all bg-emerald-500/5 hover:bg-emerald-500/10 cursor-pointer active:scale-97"
-            title={getTranslation(language, 'downloadSummary')}
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>{getTranslation(language, 'downloadSummary')}</span>
-          </button>
+          {/* Unified Actions 3-dot Dropdown Menu */}
+          <div className="relative">
+            <button
+              onClick={() => setActionsMenuOpen(!actionsMenuOpen)}
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-zinc-300 border border-zinc-700/60 hover:border-emerald-500/50 rounded-xl transition-all hover:bg-zinc-800 cursor-pointer active:scale-97"
+              title={language === 'bn' ? 'কার্যক্রম মেনু' : 'Actions Menu'}
+            >
+              <MoreVertical className="w-4 h-4 text-emerald-400" />
+              <span>{language === 'bn' ? 'কার্যক্রম' : 'Actions'}</span>
+            </button>
 
-          <button
-            onClick={onDownloadImage}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-teal-400 border border-teal-500/30 hover:border-teal-400/80 rounded-xl transition-all bg-teal-500/5 hover:bg-teal-500/10 cursor-pointer active:scale-97"
-            title={language === 'bn' ? 'ছবি ডাউনলোড' : 'Download Image'}
-          >
-            <ImageIcon className="w-3.5 h-3.5" />
-            <span>{language === 'bn' ? 'ছবি ডাউনলোড' : 'Download Image'}</span>
-          </button>
+            {actionsMenuOpen && (
+              <>
+                {/* Backdrop overlay to close when clicking outside */}
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setActionsMenuOpen(false)}
+                />
 
-          <button
-            onClick={() => handleOpenModal('reset')}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-zinc-300 border border-zinc-700/60 hover:border-zinc-500 rounded-xl transition-all hover:bg-zinc-800 cursor-pointer active:scale-97"
-            title={getTranslation(language, 'requestDemo')}
-          >
-            <RotateCcw className="w-3.5 h-3.5 text-zinc-400" />
-            <span>{getTranslation(language, 'requestDemo')}</span>
-          </button>
+                {/* Floating Absolute Dropdown Card */}
+                <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-zinc-950 border border-zinc-855 p-2.5 shadow-2xl z-50 animate-slide-down space-y-1">
+                  {/* Download PDF */}
+                  <button
+                    onClick={() => {
+                      onDownloadPDF();
+                      setActionsMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-zinc-900 text-zinc-300 hover:text-white text-xs font-semibold transition-all cursor-pointer"
+                  >
+                    <Download className="w-4 h-4 text-emerald-400" />
+                    <span>{getTranslation(language, 'downloadSummary')}</span>
+                  </button>
 
-          <button
-            onClick={() => handleOpenModal('clear')}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-400 border border-rose-500/30 hover:border-rose-400/80 rounded-xl transition-all bg-rose-500/5 hover:bg-rose-500/10 cursor-pointer active:scale-97"
-            title={getTranslation(language, 'clearAll')}
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>{getTranslation(language, 'clearAll')}</span>
-          </button>
+                  {/* Download PNG Image */}
+                  <button
+                    onClick={() => {
+                      onDownloadImage();
+                      setActionsMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-zinc-900 text-zinc-300 hover:text-white text-xs font-semibold transition-all cursor-pointer"
+                  >
+                    <ImageIcon className="w-4 h-4 text-teal-400" />
+                    <span>{language === 'bn' ? 'ছবি ডাউনলোড করুন' : 'Download Image'}</span>
+                  </button>
+
+                  {/* Restore Demo Template */}
+                  <button
+                    onClick={() => {
+                      handleOpenModal('reset');
+                      setActionsMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-zinc-900 text-zinc-300 hover:text-white text-xs font-semibold transition-all cursor-pointer"
+                  >
+                    <RotateCcw className="w-4 h-4 text-zinc-400" />
+                    <span>{getTranslation(language, 'requestDemo')}</span>
+                  </button>
+
+                  {/* Clear All Data */}
+                  <button
+                    onClick={() => {
+                      handleOpenModal('clear');
+                      setActionsMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-zinc-900 text-rose-450 hover:text-rose-350 text-xs font-semibold transition-all cursor-pointer"
+                  >
+                    <Trash2 className="w-4 h-4 text-rose-500" />
+                    <span>{getTranslation(language, 'clearAll')}</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Hamburger Menu Icon for Mobile */}

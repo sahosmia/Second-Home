@@ -23,6 +23,7 @@ export interface MessCalculationSummary {
   totalMeals: number;
   currentMealRate: number;
   results: CalculatedMemberResult[];
+  totalExpenses: number;
 }
 
 /**
@@ -99,10 +100,40 @@ export function calculateMessDetails(
     };
   });
 
+  // Calculate total PLUS and MINUS expenses across all categories
+  const totalPlusExpenses = categories
+    .filter((c) => c.type === 'PLUS')
+    .reduce((sum, c) => {
+      if (c.splitType === 'EQUAL') {
+        return sum + (c.totalLumpSum || 0);
+      } else {
+        return sum + members.reduce((subSum, m) => {
+          const input = m.customCosts.find((cc) => cc.categoryId === c.id);
+          return subSum + (input ? input.amount : 0);
+        }, 0);
+      }
+    }, 0);
+
+  const totalMinusExpenses = categories
+    .filter((c) => c.type === 'MINUS')
+    .reduce((sum, c) => {
+      if (c.splitType === 'EQUAL') {
+        return sum + (c.totalLumpSum || 0);
+      } else {
+        return sum + members.reduce((subSum, m) => {
+          const input = m.customCosts.find((cc) => cc.categoryId === c.id);
+          return subSum + (input ? input.amount : 0);
+        }, 0);
+      }
+    }, 0);
+
+  const totalExpenses = totalBazaar + totalPlusExpenses - totalMinusExpenses;
+
   return {
     totalBazaar,
     totalMeals,
     currentMealRate,
     results,
+    totalExpenses,
   };
 }
