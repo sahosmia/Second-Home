@@ -183,16 +183,16 @@ export function EditMemberModal({
                 </span>
               </h3>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {individualCategories.map((cat) => (
-                  <div key={cat.id}>
-                    <label htmlFor={`edit-member-${cat.id}`} className="block text-xs font-bold text-zinc-600 dark:text-zinc-400 uppercase mb-1 flex items-center justify-between">
-                      <span className="truncate">{cat.name}</span>
-                      <span className={`text-[9px] px-1 py-0.1 rounded font-black ${cat.type === 'PLUS' ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-950 text-rose-800 dark:text-rose-400'}`}>
+                  <div key={cat.id} className="bg-zinc-50 dark:bg-zinc-900/50 p-3 rounded-xl border border-zinc-100 dark:border-zinc-850">
+                    <label htmlFor={`edit-member-${cat.id}`} className="block text-xs font-bold text-zinc-600 dark:text-zinc-400 uppercase mb-1.5 flex items-center justify-between gap-1">
+                      <span className="truncate" title={cat.name}>{cat.name}</span>
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-black shrink-0 ${cat.type === 'PLUS' ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-950 text-rose-800 dark:text-rose-400'}`}>
                         {cat.type}
                       </span>
                     </label>
-                    <div className="relative rounded-xl shadow-xs">
+                    <div className="relative rounded-xl shadow-2xs">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <span className="text-zinc-400 dark:text-zinc-500 font-bold text-xs">৳</span>
                       </div>
@@ -204,7 +204,7 @@ export function EditMemberModal({
                         placeholder="0.00"
                         value={customAmounts[cat.id] || ''}
                         onChange={(e) => handleCustomAmountChange(cat.id, e.target.value)}
-                        className="w-full pl-7 pr-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-xl text-zinc-800 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white dark:bg-zinc-900 font-medium transition-all"
+                        className="w-full pl-7 pr-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-xl text-zinc-800 dark:text-zinc-100 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white dark:bg-zinc-900 font-bold transition-all"
                       />
                     </div>
                   </div>
