@@ -6,6 +6,8 @@ import { CostCategory, CostType, SplitType, Member } from '../types';
 import { Language, getTranslation } from '../utils/translations';
 import { Users } from 'lucide-react';
 
+import { ExpenseOccurrence } from '../types';
+
 interface EditExpenseModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -18,7 +20,8 @@ interface EditExpenseModalProps {
     type: CostType,
     splitType: SplitType,
     totalLumpSum?: number,
-    memberAmounts?: { [memberId: string]: number }
+    memberAmounts?: { [memberId: string]: number },
+    occurrence?: ExpenseOccurrence
   ) => void;
 }
 
@@ -33,6 +36,7 @@ export function EditExpenseModal({
   const [name, setName] = useState<string>('');
   const [type, setType] = useState<CostType>('PLUS');
   const [splitType, setSplitType] = useState<SplitType>('EQUAL');
+  const [occurrence, setOccurrence] = useState<ExpenseOccurrence>('REGULAR');
   const [lumpSum, setLumpSum] = useState<string>('');
   const [error, setError] = useState<string>('');
 
@@ -53,6 +57,7 @@ export function EditExpenseModal({
       setName(category.name || '');
       setType(category.type || 'PLUS');
       setSplitType(category.splitType || 'EQUAL');
+      setOccurrence(category.occurrence || 'REGULAR');
       setLumpSum(category.totalLumpSum !== undefined ? String(category.totalLumpSum) : '');
 
       const initialAmounts: { [memberId: string]: string } = {};
@@ -92,7 +97,7 @@ export function EditExpenseModal({
       });
     }
 
-    onUpdateExpense(category.id, name.trim(), type, splitType, finalLumpSum, parsedMemberAmounts);
+    onUpdateExpense(category.id, name.trim(), type, splitType, finalLumpSum, parsedMemberAmounts, occurrence);
     onClose();
   };
 
@@ -137,6 +142,36 @@ export function EditExpenseModal({
               onChange={(e) => setName(e.target.value)}
               className="w-full px-3.5 py-2.5 border border-zinc-350 dark:border-zinc-800 rounded-xl text-zinc-855 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white dark:bg-zinc-900 font-medium transition-all"
             />
+          </div>
+
+          <div className="text-left">
+            <label className="block text-xs font-bold text-zinc-600 dark:text-zinc-400 uppercase mb-1.5 flex items-center gap-1">
+              {getTranslation(language, 'occurrenceLabel')}
+            </label>
+            <div className="flex rounded-xl border border-zinc-200 dark:border-zinc-800 p-0.5 bg-zinc-50 dark:bg-zinc-900 text-xs font-bold">
+              <button
+                type="button"
+                onClick={() => setOccurrence('REGULAR')}
+                className={`flex-1 py-2 text-center rounded-lg transition-all cursor-pointer ${
+                  occurrence === 'REGULAR'
+                    ? 'bg-emerald-600 text-white shadow-sm'
+                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'
+                }`}
+              >
+                {getTranslation(language, 'occurrenceRegular')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setOccurrence('ONE_TIME')}
+                className={`flex-1 py-2 text-center rounded-lg transition-all cursor-pointer ${
+                  occurrence === 'ONE_TIME'
+                    ? 'bg-zinc-800 dark:bg-zinc-700 text-white shadow-sm'
+                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'
+                }`}
+              >
+                {getTranslation(language, 'occurrenceOneTime')}
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 text-left">

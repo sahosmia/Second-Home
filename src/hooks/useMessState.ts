@@ -4,11 +4,11 @@ import { Language } from '../utils/translations';
 
 // High-fidelity preloaded default mock data
 const DEFAULT_CATEGORIES: CostCategory[] = [
-  { id: 'cat-rent', name: 'Room Rent', type: 'PLUS', splitType: 'EQUAL', totalLumpSum: 12000 },
-  { id: 'cat-wifi', name: 'WiFi Bill', type: 'PLUS', splitType: 'EQUAL', totalLumpSum: 1500 },
-  { id: 'cat-gas', name: 'Gas Bill', type: 'PLUS', splitType: 'EQUAL', totalLumpSum: 1000 },
-  { id: 'cat-due', name: 'Old Due', type: 'PLUS', splitType: 'INDIVIDUAL' },
-  { id: 'cat-adv', name: 'Advance Balance', type: 'MINUS', splitType: 'INDIVIDUAL' },
+  { id: 'cat-rent', name: 'Room Rent', type: 'PLUS', splitType: 'EQUAL', totalLumpSum: 12000, isFixed: true },
+  { id: 'cat-wifi', name: 'WiFi Bill', type: 'PLUS', splitType: 'EQUAL', totalLumpSum: 1500, isFixed: true },
+  { id: 'cat-gas', name: 'Gas Bill', type: 'PLUS', splitType: 'EQUAL', totalLumpSum: 1000, isFixed: false },
+  { id: 'cat-due', name: 'Old Due', type: 'PLUS', splitType: 'INDIVIDUAL', isFixed: false },
+  { id: 'cat-adv', name: 'Advance Balance', type: 'MINUS', splitType: 'INDIVIDUAL', isFixed: false },
 ];
 
 const DEFAULT_MEMBERS: Member[] = [
@@ -74,19 +74,6 @@ export function useMessState() {
   const [theme, setTheme] = useState<Theme>('system');
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
-  // Hook beforeunload to prevent accidental browser refresh or page close
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = 'You have unsaved changes. Are you sure you want to exit?';
-      return e.returnValue;
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
 
   // Effect to apply theme classes based on state
   useEffect(() => {
@@ -251,7 +238,8 @@ export function useMessState() {
     type: CostType,
     splitType: SplitType,
     totalLumpSum?: number,
-    memberAmounts?: { [memberId: string]: number }
+    memberAmounts?: { [memberId: string]: number },
+    isFixed?: boolean
   ) => {
     setCategories((prev) =>
       prev.map((cat) =>
@@ -262,6 +250,7 @@ export function useMessState() {
               type,
               splitType,
               totalLumpSum: splitType === 'EQUAL' ? totalLumpSum : undefined,
+              isFixed: isFixed ?? cat.isFixed,
             }
           : cat
       )
@@ -414,24 +403,34 @@ export function useMessState() {
         console.error('Failed to clear localStorage', e);
       }
     } else {
-      // Soft Reset: Preserve members and categories name/type/splitType, reset numeric fields to 0
-      setCategories((prevCategories) =>
-        prevCategories.map((cat) => ({
+      // Soft Reset: Keep REGULAR expenses, delete ONE_TIME (on time) ones
+      // Keep totalLumpSum if isFixed is true; otherwise reset totalLumpSum to 0/undefined.
+      setCategories((prevCategories) => {
+        const regularCategories = prevCategories.filter((cat) => cat.occurrence !== 'ONE_TIME');
+        return regularCategories.map((cat) => ({
           ...cat,
-          totalLumpSum: cat.totalLumpSum !== undefined ? 0 : undefined,
-        }))
-      );
-      setMembers((prevMembers) =>
-        prevMembers.map((m) => ({
-          ...m,
-          bazaarAmount: 0,
-          totalMeals: 0,
-          customCosts: m.customCosts.map((cc) => ({
-            ...cc,
-            amount: 0,
-          })),
-        }))
-      );
+          totalLumpSum: cat.isFixed ? cat.totalLumpSum : (cat.totalLumpSum !== undefined ? 0 : undefined),
+        }));
+      });
+
+      setCategories((currentCategories) => {
+        const regularIds = currentCategories.map((cat) => cat.id);
+        const fixedIds = currentCategories.filter((cat) => cat.isFixed).map((cat) => cat.id);
+        setMembers((prevMembers) =>
+          prevMembers.map((m) => ({
+            ...m,
+            bazaarAmount: 0,
+            totalMeals: 0,
+            customCosts: m.customCosts
+              .filter((cc) => regularIds.includes(cc.categoryId))
+              .map((cc) => ({
+                ...cc,
+                amount: fixedIds.includes(cc.categoryId) ? cc.amount : 0,
+              })),
+          }))
+        );
+        return currentCategories;
+      });
     }
   };
 

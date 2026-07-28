@@ -249,79 +249,28 @@ export function SummaryDashboard({
                     {/* Collapsible Details Content block */}
                     {expandedMembers[member.id] && (
                       <div className="animate-slide-down space-y-4">
-                        {/* Section 1: Expenses/Costs (+) */}
+                        {/* Section 1: Deposits/Payments (+) */}
                         <div className="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 space-y-2 text-left">
-                          <p className="text-[9px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
-                            {getTranslation(language, 'expensesPlus')}
-                          </p>
-                          <div className="bg-rose-50/20 dark:bg-rose-950/10 border border-rose-100/40 dark:border-rose-900/20 rounded-xl p-3 space-y-2 text-[11px] sm:text-xs">
-                            {/* Meal eaten cost */}
-                            <div className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-0.5 border-b border-zinc-100/40 dark:border-zinc-800/30 last:border-0">
-                              <span className="font-semibold text-zinc-750 dark:text-zinc-200">
-                                {getTranslation(language, 'mealCostRow', {
-                                  meals: (member.totalMeals || 0).toFixed(1),
-                                  rate: currentMealRate.toFixed(2)
-                                })}
-                              </span>
-                              <span className="font-black text-rose-600 dark:text-rose-400">৳{mealExpense.toFixed(2)}</span>
-                            </div>
-
-                            {/* Dynamic plus adjustments */}
-                            {adjustments.filter(adj => adj.type === 'PLUS' && adj.amount > 0).map((adj) => {
-                              const splitLabel = adj.splitType === 'EQUAL'
-                                ? getTranslation(language, 'equalSplitLabel')
-                                : getTranslation(language, 'individualSplitLabel');
-                              return (
-                                <div key={adj.categoryId} className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-0.5 border-b border-zinc-100/40 dark:border-zinc-800/30 last:border-0">
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="font-semibold text-zinc-750 dark:text-zinc-200">{adj.categoryName}</span>
-                                    <span className="text-[8px] font-extrabold text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-zinc-700 px-1 py-0.2 rounded bg-white dark:bg-zinc-800 shrink-0">
-                                      {splitLabel}
-                                    </span>
-                                    {adj.isExcluded && (
-                                      <span className="text-[8px] font-black text-rose-500 bg-rose-50 dark:bg-rose-950 px-1 rounded shrink-0">
-                                        {getTranslation(language, 'excludedLabel')}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <span className="font-black text-rose-600 dark:text-rose-400">
-                                    ৳{adj.amount.toFixed(2)}
-                                  </span>
-                                </div>
-                              );
-                            })}
-
-                            {/* Total PLUS sum */}
-                            <div className="flex justify-between items-center pt-2 mt-1 border-t border-rose-200/50 dark:border-rose-900/30 font-black text-rose-700 dark:text-rose-400">
-                              <span>{getTranslation(language, 'totalExpenses')}</span>
-                              <span>৳{(mealExpense + totalPlus).toFixed(2)}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Section 2: Deposits/Payments (-) */}
-                        <div className="space-y-2 text-left">
                           <p className="text-[9px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                             {getTranslation(language, 'depositsMinus')}
                           </p>
-                          <div className="bg-emerald-50/20 dark:bg-emerald-950/10 border border-emerald-100/40 dark:border-emerald-900/20 rounded-xl p-3 space-y-2 text-[11px] sm:text-xs">
+                          <div className="bg-emerald-50/20 dark:bg-emerald-955/20 border border-emerald-100/40 dark:border-emerald-900/20 rounded-xl p-3 space-y-2 text-[11px] sm:text-xs">
                             {/* Bazaar deposit */}
-                            <div className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-0.5 border-b border-zinc-100/40 dark:border-zinc-800/30 last:border-0">
+                            <div className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-1 border-b border-zinc-150/40 dark:border-zinc-800/30 last:border-0">
                               <span className="font-semibold text-zinc-750 dark:text-zinc-200">
                                 {getTranslation(language, 'totalBazaar')} ({getTranslation(language, 'bazaarDepositLabel').replace(':', '')})
                               </span>
                               <span className="font-black text-emerald-600 dark:text-emerald-400">৳{(member.bazaarAmount || 0).toFixed(2)}</span>
                             </div>
 
-                            {/* Dynamic minus adjustments */}
+                            {/* Dynamic minus adjustments (Deposits/Refunds/Advance) */}
                             {adjustments.filter(adj => adj.type === 'MINUS' && adj.amount > 0).map((adj) => {
                               const splitLabel = adj.splitType === 'EQUAL'
                                 ? getTranslation(language, 'equalSplitLabel')
                                 : getTranslation(language, 'individualSplitLabel');
                               return (
-                                <div key={adj.categoryId} className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-0.5 border-b border-zinc-100/40 dark:border-zinc-800/30 last:border-0">
+                                <div key={adj.categoryId} className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-1 border-b border-zinc-150/40 dark:border-zinc-800/30 last:border-0">
                                   <div className="flex items-center gap-1.5">
                                     <span className="font-semibold text-zinc-750 dark:text-zinc-200">{adj.categoryName}</span>
                                     <span className="text-[8px] font-extrabold text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-zinc-700 px-1 py-0.2 rounded bg-white dark:bg-zinc-800 shrink-0">
@@ -347,24 +296,84 @@ export function SummaryDashboard({
                             </div>
                           </div>
                         </div>
+
+                        {/* Section 2: Expenses/Costs (-) */}
+                        <div className="space-y-2 text-left">
+                          <p className="text-[9px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                            {getTranslation(language, 'expensesPlus')}
+                          </p>
+                          <div className="bg-rose-50/20 dark:bg-rose-955/20 border border-rose-100/40 dark:border-rose-900/20 rounded-xl p-3 space-y-2 text-[11px] sm:text-xs">
+                            {/* Meal eaten cost */}
+                            <div className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-1 border-b border-zinc-150/40 dark:border-zinc-800/30 last:border-0">
+                              <span className="font-semibold text-zinc-750 dark:text-zinc-200">
+                                {getTranslation(language, 'mealCostRow', {
+                                  meals: (member.totalMeals || 0).toFixed(1),
+                                  rate: currentMealRate.toFixed(2)
+                                })}
+                              </span>
+                              <span className="font-black text-rose-600 dark:text-rose-400">৳{mealExpense.toFixed(2)}</span>
+                            </div>
+
+                            {/* Dynamic plus adjustments (Room Rent, utilities, WiFi, Gas, etc) */}
+                            {adjustments.filter(adj => adj.type === 'PLUS' && adj.amount > 0).map((adj) => {
+                              const splitLabel = adj.splitType === 'EQUAL'
+                                ? getTranslation(language, 'equalSplitLabel')
+                                : getTranslation(language, 'individualSplitLabel');
+                              return (
+                                <div key={adj.categoryId} className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-1 border-b border-zinc-150/40 dark:border-zinc-800/30 last:border-0">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-semibold text-zinc-750 dark:text-zinc-200">{adj.categoryName}</span>
+                                    <span className="text-[8px] font-extrabold text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-zinc-700 px-1 py-0.2 rounded bg-white dark:bg-zinc-800 shrink-0">
+                                      {splitLabel}
+                                    </span>
+                                    {adj.isExcluded && (
+                                      <span className="text-[8px] font-black text-rose-500 bg-rose-50 dark:bg-rose-950 px-1 rounded shrink-0">
+                                        {getTranslation(language, 'excludedLabel')}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className="font-black text-rose-600 dark:text-rose-400">
+                                    ৳{adj.amount.toFixed(2)}
+                                  </span>
+                                </div>
+                              );
+                            })}
+
+                            {/* Total PLUS sum */}
+                            <div className="flex justify-between items-center pt-2 mt-1 border-t border-rose-200/50 dark:border-rose-900/30 font-black text-rose-700 dark:text-rose-400">
+                              <span>{getTranslation(language, 'totalExpenses')}</span>
+                              <span>৳{(mealExpense + totalPlus).toFixed(2)}</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
 
                   {/* Summary Box Footer */}
                   {expandedMembers[member.id] && (
-                    <div className="mt-4 pt-2.5 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-955 -mx-5 -mb-5 px-5 py-2.5 rounded-b-2xl flex flex-col sm:flex-row gap-1 sm:gap-2 justify-between items-center animate-slide-down text-[10px] sm:text-xs text-left">
-                      <span className="font-extrabold text-zinc-400 dark:text-zinc-505 uppercase tracking-wider">
-                        {language === 'bn' ? 'হিসাব সমীকরণ (জমা - খরচ)' : 'Ledger Equation (Paid - Cost)'}
-                      </span>
-                      <div className="flex items-center gap-1 text-zinc-750 dark:text-zinc-300 font-black">
-                        <span>৳{(member.bazaarAmount + totalMinus).toFixed(1)}</span>
-                        <span className="text-zinc-400 font-normal">-</span>
-                        <span>৳{(mealExpense + totalPlus).toFixed(1)}</span>
-                        <span className="text-zinc-400 font-normal">=</span>
-                        <span className={finalBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
-                          {finalBalance >= 0 ? '+' : '-'}৳{Math.abs(finalBalance).toFixed(1)}
+                    <div className="mt-4 pt-2.5 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-955 -mx-5 -mb-5 px-5 py-2.5 rounded-b-2xl flex flex-col gap-1.5 items-stretch animate-slide-down text-[10px] sm:text-xs text-left">
+                      <div className="flex justify-between items-center">
+                        <span className="font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+                          {language === 'bn' ? 'হিসাব সমীকরণ' : 'Ledger Equation'}
                         </span>
+                        <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500">
+                          {language === 'bn' ? '(জমা - খরচ)' : '(Paid - Cost)'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-zinc-750 dark:text-zinc-300 font-black pt-1.5 border-t border-dashed border-zinc-200 dark:border-zinc-800">
+                        <div className="flex items-center gap-1">
+                          <span>৳{(member.bazaarAmount + totalMinus).toFixed(1)}</span>
+                          <span className="text-zinc-450 font-normal text-[10px]">-</span>
+                          <span>৳{(mealExpense + totalPlus).toFixed(1)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className="text-zinc-450 font-normal text-[10px]">=</span>
+                          <span className={finalBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
+                            {finalBalance >= 0 ? '+' : '-'}৳{Math.abs(finalBalance).toFixed(1)}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   )}

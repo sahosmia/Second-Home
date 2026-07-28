@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Second Home - Monthly Bachelor Mess Tracker (সেকেন্ড হোম)",
   description: "Seamless bachelor flat share, mess meal tracking, and customized individual expenses.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
