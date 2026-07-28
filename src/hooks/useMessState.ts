@@ -54,6 +54,8 @@ const DEFAULT_MEMBERS: Member[] = [
   },
 ];
 
+export type Theme = 'system' | 'light' | 'dark';
+
 export function useMessState() {
   const [categories, setCategories] = useState<CostCategory[]>(DEFAULT_CATEGORIES);
   // Set initial members state to empty as per requirements: "The initial member list MUST start empty ([])"
@@ -69,6 +71,7 @@ export function useMessState() {
   };
   const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonthYear());
   const [language, setLanguage] = useState<Language>('bn');
+  const [theme, setTheme] = useState<Theme>('system');
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   // Hook beforeunload to prevent accidental browser refresh or page close
@@ -85,6 +88,35 @@ export function useMessState() {
     };
   }, []);
 
+  // Effect to apply theme classes based on state
+  useEffect(() => {
+    const root = document.documentElement;
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const applyTheme = () => {
+      const isDark =
+        theme === 'dark' ||
+        (theme === 'system' && mediaQuery.matches);
+
+      if (isDark) {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+    };
+
+    applyTheme();
+
+    const handleChange = () => {
+      if (theme === 'system') {
+        applyTheme();
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [theme]);
+
   // Load state from localStorage on client mount
   useEffect(() => {
     try {
@@ -93,6 +125,7 @@ export function useMessState() {
       const savedMessName = localStorage.getItem('second_home_messName');
       const savedSelectedMonth = localStorage.getItem('second_home_selectedMonth');
       const savedLanguage = localStorage.getItem('second_home_language');
+      const savedTheme = localStorage.getItem('second_home_theme');
 
       /* eslint-disable react-hooks/set-state-in-effect */
       if (savedCategories) setCategories(JSON.parse(savedCategories));
@@ -101,6 +134,9 @@ export function useMessState() {
       if (savedSelectedMonth) setSelectedMonth(savedSelectedMonth);
       if (savedLanguage === 'en' || savedLanguage === 'bn') {
         setLanguage(savedLanguage as Language);
+      }
+      if (savedTheme === 'system' || savedTheme === 'light' || savedTheme === 'dark') {
+        setTheme(savedTheme as Theme);
       }
       /* eslint-enable react-hooks/set-state-in-effect */
     } catch (e) {
@@ -160,6 +196,15 @@ export function useMessState() {
       console.error('Failed to save language to localStorage', e);
     }
   }, [language, isLoaded]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    try {
+      localStorage.setItem('second_home_theme', theme);
+    } catch (e) {
+      console.error('Failed to save theme to localStorage', e);
+    }
+  }, [theme, isLoaded]);
 
   // Category Management Operations
   const addCategory = (
@@ -417,5 +462,7 @@ export function useMessState() {
     resetToDefault,
     isLoaded,
     updateMemberFull,
+    theme,
+    setTheme,
   };
 }

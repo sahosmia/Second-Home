@@ -68,57 +68,55 @@ export function SummaryDashboard({
     }
   };
 
-  const individualCategories = categories.filter((cat) => cat.splitType === 'INDIVIDUAL');
-
   return (
     <section className="space-y-6 print:hidden">
       {/* 3-Column Top KPI Grid (Highly Responsive & Space-saving on Mobile) */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6">
         {/* Total Bazaar */}
-        <div className="bg-white border border-zinc-200 rounded-2xl p-2.5 sm:p-6 flex items-center gap-2.5 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 col-span-1">
-          <div className="p-1.5 sm:p-4 bg-emerald-500/10 text-emerald-600 rounded-lg sm:rounded-xl shrink-0">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-2.5 sm:p-6 flex items-center gap-2.5 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 col-span-1">
+          <div className="p-1.5 sm:p-4 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg sm:rounded-xl shrink-0">
             <ShoppingBag className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[8px] sm:text-xs font-black text-zinc-500 uppercase tracking-wider truncate">
+            <p className="text-[8px] sm:text-xs font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-wider truncate">
               {getTranslation(language, 'totalBazaar')}
             </p>
-            <h3 className="text-xs sm:text-2xl font-black text-zinc-900 mt-0.5 sm:mt-1 truncate">৳{totalBazaar.toFixed(0)}</h3>
-            <p className="text-[10px] text-zinc-400 mt-0.5 font-medium truncate hidden sm:block">
+            <h3 className="text-xs sm:text-2xl font-black text-zinc-900 dark:text-white mt-0.5 sm:mt-1 truncate">৳{totalBazaar.toFixed(0)}</h3>
+            <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5 font-medium truncate hidden sm:block">
               {getTranslation(language, 'memberDeposits')}
             </p>
           </div>
         </div>
 
         {/* Total Meals */}
-        <div className="bg-white border border-zinc-200 rounded-2xl p-2.5 sm:p-6 flex items-center gap-2.5 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 col-span-1">
-          <div className="p-1.5 sm:p-4 bg-amber-500/10 text-amber-600 rounded-lg sm:rounded-xl shrink-0">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-2.5 sm:p-6 flex items-center gap-2.5 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 col-span-1">
+          <div className="p-1.5 sm:p-4 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-lg sm:rounded-xl shrink-0">
             <Utensils className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[8px] sm:text-xs font-black text-zinc-500 uppercase tracking-wider truncate">
+            <p className="text-[8px] sm:text-xs font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-wider truncate">
               {getTranslation(language, 'totalMeals')}
             </p>
-            <h3 className="text-xs sm:text-2xl font-black text-zinc-900 mt-0.5 sm:mt-1 truncate">{totalMeals.toFixed(1)}</h3>
-            <p className="text-[10px] text-zinc-400 mt-0.5 font-medium truncate hidden sm:block">
+            <h3 className="text-xs sm:text-2xl font-black text-zinc-900 dark:text-white mt-0.5 sm:mt-1 truncate">{totalMeals.toFixed(1)}</h3>
+            <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5 font-medium truncate hidden sm:block">
               {getTranslation(language, 'mealsEaten')}
             </p>
           </div>
         </div>
 
         {/* Current Meal Rate */}
-        <div className="bg-white border border-zinc-200 rounded-2xl p-2.5 sm:p-6 flex items-center gap-2.5 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 relative overflow-hidden col-span-2 sm:col-span-1">
-          <div className="p-1.5 sm:p-4 bg-emerald-600/10 text-emerald-700 rounded-lg sm:rounded-xl shrink-0">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-2.5 sm:p-6 flex items-center gap-2.5 sm:gap-5 shadow-xs hover:shadow-md transition-all duration-200 relative overflow-hidden col-span-2 sm:col-span-1">
+          <div className="p-1.5 sm:p-4 bg-emerald-600/10 text-emerald-700 dark:text-emerald-300 rounded-lg sm:rounded-xl shrink-0">
             <Award className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[8px] sm:text-xs font-black text-zinc-500 uppercase tracking-wider truncate">
+            <p className="text-[8px] sm:text-xs font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-wider truncate">
               {getTranslation(language, 'mealRate')}
             </p>
-            <h3 className="text-xs sm:text-2xl font-black text-zinc-900 mt-0.5 sm:mt-1 truncate">
+            <h3 className="text-xs sm:text-2xl font-black text-zinc-900 dark:text-white mt-0.5 sm:mt-1 truncate">
               ৳{currentMealRate.toFixed(2)}
             </h3>
-            <p className="text-[10px] text-zinc-400 mt-0.5 font-medium truncate hidden sm:block">
+            <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5 font-medium truncate hidden sm:block">
               {getTranslation(language, 'bazaarMeals')}
             </p>
           </div>
@@ -143,18 +141,18 @@ export function SummaryDashboard({
         </div>
 
         {results.length === 0 ? (
-          <div className="text-center py-12 bg-white border border-zinc-200 rounded-2xl text-zinc-450 text-sm font-semibold shadow-3xs">
+          <div className="text-center py-12 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-zinc-450 text-sm font-semibold shadow-3xs">
             <Plus className="w-8 h-8 mx-auto text-zinc-350 stroke-1.5 mb-2 animate-pulse cursor-pointer" onClick={onOpenAddMemberModal} />
-            <p className="text-zinc-600 text-xs font-extrabold">
+            <p className="text-zinc-600 dark:text-zinc-300 text-xs font-extrabold">
               {getTranslation(language, 'noMembersYet')}
             </p>
-            <p className="text-[10px] text-zinc-400 mt-1">
+            <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-1">
               {getTranslation(language, 'clickAddMember')}
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {results.map(({ member, finalBalance, mealExpense, netAdjustment, totalPersonalExpense }) => {
+            {results.map(({ member, finalBalance, mealExpense, adjustments, totalPlus, totalMinus }) => {
               const isOwed = finalBalance > 0;
               const isOwes = finalBalance < 0;
               const absBalance = Math.abs(finalBalance);
@@ -162,34 +160,34 @@ export function SummaryDashboard({
               return (
                 <div
                   key={member.id}
-                  className={`border rounded-2xl p-5 shadow-2xs flex flex-col justify-between transition-all duration-200 bg-white hover:shadow-md hover:-translate-y-0.5 ${
+                  className={`border rounded-2xl p-5 shadow-2xs flex flex-col justify-between transition-all duration-200 bg-white dark:bg-zinc-900 hover:shadow-md hover:-translate-y-0.5 ${
                     isOwed
-                      ? 'border-emerald-200 hover:border-emerald-400/80'
+                      ? 'border-emerald-200 dark:border-emerald-950/60 hover:border-emerald-400/80 dark:hover:border-emerald-500'
                       : isOwes
-                      ? 'border-rose-200 hover:border-rose-400/80'
-                      : 'border-zinc-200 hover:border-zinc-400/80'
+                      ? 'border-rose-200 dark:border-rose-950/60 hover:border-rose-400/80 dark:hover:border-rose-500'
+                      : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-400/80 dark:hover:border-zinc-700'
                   }`}
                 >
                   <div>
                     {/* Header Name & Action Controls / Settlement Status */}
-                    <div className="flex items-start justify-between gap-2.5 pb-2 border-b border-zinc-100">
+                    <div className="flex items-start justify-between gap-2.5 pb-2 border-b border-zinc-100 dark:border-zinc-800/80">
                       <div className="min-w-0 flex-1">
-                        <h4 className="font-extrabold text-zinc-800 text-sm sm:text-base leading-tight break-words truncate" title={member.name}>
+                        <h4 className="font-extrabold text-zinc-800 dark:text-zinc-100 text-sm sm:text-base leading-tight break-words truncate" title={member.name}>
                           {member.name || 'Unnamed'}
                         </h4>
                         <div className="mt-1 flex flex-wrap gap-1">
                           {isOwed && (
-                            <span className="flex items-center gap-0.5 text-[8px] font-extrabold bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded-md uppercase tracking-wider">
+                            <span className="flex items-center gap-0.5 text-[8px] font-extrabold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 px-1.5 py-0.5 rounded-md uppercase tracking-wider">
                               <TrendingUp className="w-2.5 h-2.5" /> {getTranslation(language, 'receives')}
                             </span>
                           )}
                           {isOwes && (
-                            <span className="flex items-center gap-0.5 text-[8px] font-extrabold bg-rose-50 text-rose-800 px-1.5 py-0.5 rounded-md uppercase tracking-wider">
+                            <span className="flex items-center gap-0.5 text-[8px] font-extrabold bg-rose-50 dark:bg-rose-950/30 text-rose-800 dark:text-rose-400 px-1.5 py-0.5 rounded-md uppercase tracking-wider">
                               <TrendingDown className="w-2.5 h-2.5" /> {getTranslation(language, 'owes')}
                             </span>
                           )}
                           {!isOwed && !isOwes && (
-                            <span className="text-[8px] font-extrabold bg-zinc-50 text-zinc-500 px-1.5 py-0.5 rounded-md uppercase tracking-wider">
+                            <span className="text-[8px] font-extrabold bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 px-1.5 py-0.5 rounded-md uppercase tracking-wider">
                               {getTranslation(language, 'settleZero')}
                             </span>
                           )}
@@ -201,7 +199,7 @@ export function SummaryDashboard({
                         <button
                           type="button"
                           onClick={() => handleEditClick(member)}
-                          className="p-1 text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-md transition-all cursor-pointer border border-transparent hover:border-emerald-100"
+                          className="p-1 text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-zinc-800 rounded-md transition-all cursor-pointer border border-transparent hover:border-emerald-100 dark:hover:border-zinc-700"
                           title={`Edit ${member.name}`}
                         >
                           <Edit2 className="w-3 h-3" />
@@ -209,7 +207,7 @@ export function SummaryDashboard({
                         <button
                           type="button"
                           onClick={() => handleDeleteClick(member)}
-                          className="p-1 text-zinc-400 hover:text-rose-650 hover:bg-rose-50 rounded-md transition-all cursor-pointer border border-transparent hover:border-rose-100"
+                          className="p-1 text-zinc-400 hover:text-rose-650 hover:bg-rose-50 dark:hover:bg-zinc-800 rounded-md transition-all cursor-pointer border border-transparent hover:border-rose-100 dark:hover:border-zinc-700"
                           title={`Delete ${member.name}`}
                         >
                           <Trash2 className="w-3 h-3" />
@@ -220,7 +218,7 @@ export function SummaryDashboard({
                     {/* Final Net Amount Display */}
                     <div className="mt-4 flex items-end justify-between gap-2">
                       <div>
-                        <p className="text-[9px] font-extrabold text-zinc-450 uppercase tracking-wider">
+                        <p className="text-[9px] font-extrabold text-zinc-450 dark:text-zinc-505 uppercase tracking-wider">
                           {getTranslation(language, 'settlementBalance')}
                         </p>
                         <h5
@@ -229,7 +227,7 @@ export function SummaryDashboard({
                               ? 'text-emerald-600'
                               : isOwes
                               ? 'text-rose-600'
-                              : 'text-zinc-700'
+                              : 'text-zinc-700 dark:text-zinc-300'
                           }`}
                         >
                           {isOwed ? '+' : isOwes ? '-' : ''}৳{absBalance.toFixed(2)}
@@ -240,7 +238,7 @@ export function SummaryDashboard({
                       <button
                         type="button"
                         onClick={() => toggleMemberDetails(member.id)}
-                        className="text-[10px] font-extrabold text-emerald-600 hover:text-emerald-500 bg-emerald-50/50 px-2.5 py-1.5 rounded-lg border border-emerald-100 hover:border-emerald-200 transition-all cursor-pointer"
+                        className="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 bg-emerald-50/50 dark:bg-zinc-800/80 px-2.5 py-1.5 rounded-lg border border-emerald-100 dark:border-zinc-700 hover:border-emerald-200 dark:hover:bg-zinc-750 transition-all cursor-pointer"
                       >
                         {expandedMembers[member.id]
                           ? getTranslation(language, 'cancel').replace('Cancel', 'Hide Details').replace('বাতিল', 'আড়াল করুন')
@@ -250,78 +248,124 @@ export function SummaryDashboard({
 
                     {/* Collapsible Details Content block */}
                     {expandedMembers[member.id] && (
-                      <div className="animate-slide-down">
-                        {/* Expanded Costs Breakdown */}
-                        <div className="mt-4 space-y-1.5 border-t border-zinc-100 pt-3 text-[10px] sm:text-xs text-left">
-                          <div className="flex justify-between items-center text-zinc-500">
-                            <span className="hidden sm:inline">{getTranslation(language, 'bazaarDepositLabel')}</span>
-                            <span className="inline sm:hidden">{getTranslation(language, 'depositLabel')}</span>
-                            <span className="font-bold text-zinc-700">৳{(member.bazaarAmount || 0).toFixed(1)}</span>
-                          </div>
-                          <div className="flex justify-between items-center text-zinc-500">
-                            <span>{getTranslation(language, 'mealsLabel', { count: member.totalMeals || 0 })}</span>
-                            <span className="font-bold text-zinc-700">৳{mealExpense.toFixed(1)}</span>
-                          </div>
-                          <div className="flex justify-between items-center text-zinc-500">
-                            <span className="hidden sm:inline">{getTranslation(language, 'adjustmentsLabel')}</span>
-                            <span className="inline sm:hidden">{getTranslation(language, 'adjustsLabel')}</span>
-                            <span className={`font-bold ${netAdjustment >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                              {netAdjustment >= 0 ? '+' : '-'}৳{Math.abs(netAdjustment).toFixed(1)}
-                            </span>
+                      <div className="animate-slide-down space-y-4">
+                        {/* Section 1: Expenses/Costs (+) */}
+                        <div className="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 space-y-2 text-left">
+                          <p className="text-[9px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                            {getTranslation(language, 'expensesPlus')}
+                          </p>
+                          <div className="bg-rose-50/20 dark:bg-rose-950/10 border border-rose-100/40 dark:border-rose-900/20 rounded-xl p-3 space-y-2 text-[11px] sm:text-xs">
+                            {/* Meal eaten cost */}
+                            <div className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-0.5 border-b border-zinc-100/40 dark:border-zinc-800/30 last:border-0">
+                              <span className="font-semibold text-zinc-750 dark:text-zinc-200">
+                                {getTranslation(language, 'mealCostRow', {
+                                  meals: (member.totalMeals || 0).toFixed(1),
+                                  rate: currentMealRate.toFixed(2)
+                                })}
+                              </span>
+                              <span className="font-black text-rose-600 dark:text-rose-400">৳{mealExpense.toFixed(2)}</span>
+                            </div>
+
+                            {/* Dynamic plus adjustments */}
+                            {adjustments.filter(adj => adj.type === 'PLUS' && adj.amount > 0).map((adj) => {
+                              const splitLabel = adj.splitType === 'EQUAL'
+                                ? getTranslation(language, 'equalSplitLabel')
+                                : getTranslation(language, 'individualSplitLabel');
+                              return (
+                                <div key={adj.categoryId} className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-0.5 border-b border-zinc-100/40 dark:border-zinc-800/30 last:border-0">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-semibold text-zinc-750 dark:text-zinc-200">{adj.categoryName}</span>
+                                    <span className="text-[8px] font-extrabold text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-zinc-700 px-1 py-0.2 rounded bg-white dark:bg-zinc-800 shrink-0">
+                                      {splitLabel}
+                                    </span>
+                                    {adj.isExcluded && (
+                                      <span className="text-[8px] font-black text-rose-500 bg-rose-50 dark:bg-rose-950 px-1 rounded shrink-0">
+                                        {getTranslation(language, 'excludedLabel')}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className="font-black text-rose-600 dark:text-rose-400">
+                                    ৳{adj.amount.toFixed(2)}
+                                  </span>
+                                </div>
+                              );
+                            })}
+
+                            {/* Total PLUS sum */}
+                            <div className="flex justify-between items-center pt-2 mt-1 border-t border-rose-200/50 dark:border-rose-900/30 font-black text-rose-700 dark:text-rose-400">
+                              <span>{getTranslation(language, 'totalExpenses')}</span>
+                              <span>৳{(mealExpense + totalPlus).toFixed(2)}</span>
+                            </div>
                           </div>
                         </div>
 
-                        {/* Present list of individual custom costs inside the sheet card only if they are non-zero */}
-                        {(() => {
-                          const activeCustomCosts = individualCategories.filter((cat) => {
-                            const costInput = member.customCosts?.find((c) => c.categoryId === cat.id);
-                            return costInput && costInput.amount > 0;
-                          });
-
-                          if (activeCustomCosts.length === 0) return null;
-
-                          return (
-                            <div className="mt-4 pt-3 border-t border-zinc-100 space-y-2 text-left">
-                              <p className="text-[8px] font-extrabold text-zinc-400 uppercase tracking-wider">
-                                {getTranslation(language, 'customAdjustments')}
-                              </p>
-                              <div className="grid grid-cols-2 gap-1.5">
-                                {activeCustomCosts.map((cat) => {
-                                  const costInput = member.customCosts?.find((c) => c.categoryId === cat.id);
-                                  const val = costInput ? costInput.amount : 0;
-                                  return (
-                                    <div
-                                      key={cat.id}
-                                      className="bg-zinc-50/50 border border-zinc-150 p-1.5 rounded-lg flex flex-col justify-between gap-0.5"
-                                    >
-                                      <div className="flex items-center justify-between gap-1 min-w-0">
-                                        <span className="text-[8px] font-bold text-zinc-500 truncate" title={cat.name}>
-                                          {cat.name}
-                                        </span>
-                                        <span className={`text-[7px] font-black px-0.5 rounded-xs uppercase scale-90 origin-right ${cat.type === 'PLUS' ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800'}`}>
-                                          {cat.type}
-                                        </span>
-                                      </div>
-                                      <span className="text-[10px] font-black text-zinc-750">
-                                        ৳{val.toFixed(1)}
-                                      </span>
-                                    </div>
-                                  );
-                                })}
-                              </div>
+                        {/* Section 2: Deposits/Payments (-) */}
+                        <div className="space-y-2 text-left">
+                          <p className="text-[9px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            {getTranslation(language, 'depositsMinus')}
+                          </p>
+                          <div className="bg-emerald-50/20 dark:bg-emerald-950/10 border border-emerald-100/40 dark:border-emerald-900/20 rounded-xl p-3 space-y-2 text-[11px] sm:text-xs">
+                            {/* Bazaar deposit */}
+                            <div className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-0.5 border-b border-zinc-100/40 dark:border-zinc-800/30 last:border-0">
+                              <span className="font-semibold text-zinc-750 dark:text-zinc-200">
+                                {getTranslation(language, 'totalBazaar')} ({getTranslation(language, 'bazaarDepositLabel').replace(':', '')})
+                              </span>
+                              <span className="font-black text-emerald-600 dark:text-emerald-400">৳{(member.bazaarAmount || 0).toFixed(2)}</span>
                             </div>
-                          );
-                        })()}
+
+                            {/* Dynamic minus adjustments */}
+                            {adjustments.filter(adj => adj.type === 'MINUS' && adj.amount > 0).map((adj) => {
+                              const splitLabel = adj.splitType === 'EQUAL'
+                                ? getTranslation(language, 'equalSplitLabel')
+                                : getTranslation(language, 'individualSplitLabel');
+                              return (
+                                <div key={adj.categoryId} className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-0.5 border-b border-zinc-100/40 dark:border-zinc-800/30 last:border-0">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-semibold text-zinc-750 dark:text-zinc-200">{adj.categoryName}</span>
+                                    <span className="text-[8px] font-extrabold text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-zinc-700 px-1 py-0.2 rounded bg-white dark:bg-zinc-800 shrink-0">
+                                      {splitLabel}
+                                    </span>
+                                    {adj.isExcluded && (
+                                      <span className="text-[8px] font-black text-rose-500 bg-rose-50 dark:bg-rose-950 px-1 rounded shrink-0">
+                                        {getTranslation(language, 'excludedLabel')}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className="font-black text-emerald-600 dark:text-emerald-400">
+                                    ৳{adj.amount.toFixed(2)}
+                                  </span>
+                                </div>
+                              );
+                            })}
+
+                            {/* Total MINUS sum */}
+                            <div className="flex justify-between items-center pt-2 mt-1 border-t border-emerald-200/50 dark:border-emerald-900/30 font-black text-emerald-700 dark:text-emerald-400">
+                              <span>{getTranslation(language, 'totalPaid')}</span>
+                              <span>৳{(member.bazaarAmount + totalMinus).toFixed(2)}</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
 
                   {/* Summary Box Footer */}
                   {expandedMembers[member.id] && (
-                    <div className="mt-4 pt-2.5 border-t border-zinc-100 bg-zinc-50/50 -mx-5 -mb-5 px-5 py-2.5 rounded-b-2xl flex justify-between items-center animate-slide-down">
-                      <span className="text-[9px] font-extrabold text-zinc-400 uppercase tracking-wider hidden sm:inline">{getTranslation(language, 'totalPersonalCost')}</span>
-                      <span className="text-[9px] font-extrabold text-zinc-400 uppercase tracking-wider inline sm:hidden">{getTranslation(language, 'totalCost')}</span>
-                      <span className="text-xs font-bold text-zinc-800">৳{totalPersonalExpense.toFixed(1)}</span>
+                    <div className="mt-4 pt-2.5 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-955 -mx-5 -mb-5 px-5 py-2.5 rounded-b-2xl flex flex-col sm:flex-row gap-1 sm:gap-2 justify-between items-center animate-slide-down text-[10px] sm:text-xs text-left">
+                      <span className="font-extrabold text-zinc-400 dark:text-zinc-505 uppercase tracking-wider">
+                        {language === 'bn' ? 'হিসাব সমীকরণ (জমা - খরচ)' : 'Ledger Equation (Paid - Cost)'}
+                      </span>
+                      <div className="flex items-center gap-1 text-zinc-750 dark:text-zinc-300 font-black">
+                        <span>৳{(member.bazaarAmount + totalMinus).toFixed(1)}</span>
+                        <span className="text-zinc-400 font-normal">-</span>
+                        <span>৳{(mealExpense + totalPlus).toFixed(1)}</span>
+                        <span className="text-zinc-400 font-normal">=</span>
+                        <span className={finalBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
+                          {finalBalance >= 0 ? '+' : '-'}৳{Math.abs(finalBalance).toFixed(1)}
+                        </span>
+                      </div>
                     </div>
                   )}
                 </div>
