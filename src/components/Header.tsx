@@ -256,7 +256,7 @@ export function Header({
                 />
                 
                 {/* Floating Absolute Dropdown Card */}
-                <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-zinc-950 border border-zinc-855 p-2.5 shadow-2xl z-50 animate-slide-down space-y-1">
+                <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-zinc-950 border border-zinc-900 p-2.5 shadow-2xl z-50 animate-slide-down space-y-1">
                   {/* Download PDF */}
                   <button
                     onClick={() => {
@@ -299,7 +299,7 @@ export function Header({
                       handleOpenModal('clear');
                       setActionsMenuOpen(false);
                     }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-zinc-900 text-rose-450 hover:text-rose-350 text-xs font-semibold transition-all cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-zinc-900 text-rose-400 hover:text-rose-300 text-xs font-semibold transition-all cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4 text-rose-500" />
                     <span>{getTranslation(language, 'clearAll')}</span>
@@ -389,7 +389,7 @@ export function Header({
               onClick={() => handleOpenModal('clear')}
               className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/10 text-rose-400 text-xs font-bold transition-all"
             >
-              <Trash2 className="w-4 h-4 text-rose-450" />
+              <Trash2 className="w-4 h-4 text-rose-400" />
               {getTranslation(language, 'clearAll')}
             </button>
           </div>

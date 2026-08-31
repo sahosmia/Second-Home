@@ -21,6 +21,7 @@ interface SummaryDashboardProps {
     totalMeals: number,
     customCosts: { categoryId: string; amount: number }[]
   ) => void;
+  onAddCategory: (category: Omit<CostCategory, 'id'>) => void;
 }
 
 export function SummaryDashboard({
@@ -30,6 +31,7 @@ export function SummaryDashboard({
   onOpenAddMemberModal,
   onRemoveMember,
   onUpdateMemberFull,
+  onAddCategory,
 }: SummaryDashboardProps) {
   const { totalBazaar, totalMeals, currentMealRate, results, totalExpenses } = summary;
 
@@ -148,7 +150,7 @@ export function SummaryDashboard({
           <button
             type="button"
             onClick={onOpenAddMemberModal}
-            className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-555 rounded-lg shadow-sm transition-all cursor-pointer active:scale-97 shrink-0"
+            className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 rounded-lg shadow-sm transition-all cursor-pointer active:scale-97 shrink-0"
             title={getTranslation(language, 'addMember')}
           >
             <Plus className="w-3.5 h-3.5" />
@@ -157,8 +159,8 @@ export function SummaryDashboard({
         </div>
 
         {results.length === 0 ? (
-          <div className="text-center py-12 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-zinc-450 text-sm font-semibold shadow-3xs">
-            <Plus className="w-8 h-8 mx-auto text-zinc-350 stroke-1.5 mb-2 animate-pulse cursor-pointer" onClick={onOpenAddMemberModal} />
+          <div className="text-center py-12 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-zinc-400 text-sm font-semibold shadow-3xs">
+            <Plus className="w-8 h-8 mx-auto text-zinc-300 stroke-1.5 mb-2 animate-pulse cursor-pointer" onClick={onOpenAddMemberModal} />
             <p className="text-zinc-600 dark:text-zinc-300 text-xs font-extrabold">
               {getTranslation(language, 'noMembersYet')}
             </p>
@@ -223,7 +225,7 @@ export function SummaryDashboard({
                         <button
                           type="button"
                           onClick={() => handleDeleteClick(member)}
-                          className="p-1 text-zinc-400 hover:text-rose-650 hover:bg-rose-50 dark:hover:bg-zinc-800 rounded-md transition-all cursor-pointer border border-transparent hover:border-rose-100 dark:hover:border-zinc-700"
+                          className="p-1 text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-zinc-800 rounded-md transition-all cursor-pointer border border-transparent hover:border-rose-100 dark:hover:border-zinc-700"
                           title={`Delete ${member.name}`}
                         >
                           <Trash2 className="w-3 h-3" />
@@ -234,7 +236,7 @@ export function SummaryDashboard({
                     {/* Final Net Amount Display */}
                     <div className="mt-4 flex items-end justify-between gap-2">
                       <div>
-                        <p className="text-[9px] font-extrabold text-zinc-450 dark:text-zinc-505 uppercase tracking-wider">
+                        <p className="text-[9px] font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
                           {getTranslation(language, 'settlementBalance')}
                         </p>
                         <h5
@@ -254,7 +256,7 @@ export function SummaryDashboard({
                       <button
                         type="button"
                         onClick={() => toggleMemberDetails(member.id)}
-                        className="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 bg-emerald-50/50 dark:bg-zinc-800/80 px-2.5 py-1.5 rounded-lg border border-emerald-100 dark:border-zinc-700 hover:border-emerald-200 dark:hover:bg-zinc-750 transition-all cursor-pointer"
+                        className="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 bg-emerald-50/50 dark:bg-zinc-800/80 px-2.5 py-1.5 rounded-lg border border-emerald-100 dark:border-zinc-700 hover:border-emerald-200 dark:hover:bg-zinc-700 transition-all cursor-pointer"
                       >
                         {expandedMembers[member.id]
                           ? getTranslation(language, 'cancel').replace('Cancel', 'Hide Details').replace('বাতিল', 'আড়াল করুন')
@@ -271,10 +273,10 @@ export function SummaryDashboard({
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                             {getTranslation(language, 'depositsMinus')}
                           </p>
-                          <div className="bg-emerald-50/20 dark:bg-emerald-955/20 border border-emerald-100/40 dark:border-emerald-900/20 rounded-xl p-3 space-y-2 text-[11px] sm:text-xs">
+                          <div className="bg-emerald-50/20 dark:bg-emerald-950/20 border border-emerald-100/40 dark:border-emerald-900/20 rounded-xl p-3 space-y-2 text-[11px] sm:text-xs">
                             {/* Bazaar deposit */}
-                            <div className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-1 border-b border-zinc-150/40 dark:border-zinc-800/30 last:border-0">
-                              <span className="font-semibold text-zinc-750 dark:text-zinc-200">
+                            <div className="flex justify-between items-center text-zinc-600 dark:text-zinc-300 py-1 border-b border-zinc-100/40 dark:border-zinc-800/30 last:border-0">
+                              <span className="font-semibold text-zinc-700 dark:text-zinc-200">
                                 {getTranslation(language, 'totalBazaar')} ({getTranslation(language, 'bazaarDepositLabel').replace(':', '')})
                               </span>
                               <span className="font-black text-emerald-600 dark:text-emerald-400">৳{(member.bazaarAmount || 0).toFixed(2)}</span>
@@ -286,9 +288,9 @@ export function SummaryDashboard({
                                 ? getTranslation(language, 'equalSplitLabel')
                                 : getTranslation(language, 'individualSplitLabel');
                               return (
-                                <div key={adj.categoryId} className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-1 border-b border-zinc-150/40 dark:border-zinc-800/30 last:border-0">
+                                <div key={adj.categoryId} className="flex justify-between items-center text-zinc-600 dark:text-zinc-300 py-1 border-b border-zinc-100/40 dark:border-zinc-800/30 last:border-0">
                                   <div className="flex items-center gap-1.5">
-                                    <span className="font-semibold text-zinc-750 dark:text-zinc-200">{adj.categoryName}</span>
+                                    <span className="font-semibold text-zinc-700 dark:text-zinc-200">{adj.categoryName}</span>
                                     <span className="text-[8px] font-extrabold text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-zinc-700 px-1 py-0.2 rounded bg-white dark:bg-zinc-800 shrink-0">
                                       {splitLabel}
                                     </span>
@@ -319,10 +321,10 @@ export function SummaryDashboard({
                             <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
                             {getTranslation(language, 'expensesPlus')}
                           </p>
-                          <div className="bg-rose-50/20 dark:bg-rose-955/20 border border-rose-100/40 dark:border-rose-900/20 rounded-xl p-3 space-y-2 text-[11px] sm:text-xs">
+                          <div className="bg-rose-50/20 dark:bg-rose-950/20 border border-rose-100/40 dark:border-rose-900/20 rounded-xl p-3 space-y-2 text-[11px] sm:text-xs">
                             {/* Meal eaten cost */}
-                            <div className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-1 border-b border-zinc-150/40 dark:border-zinc-800/30 last:border-0">
-                              <span className="font-semibold text-zinc-750 dark:text-zinc-200">
+                            <div className="flex justify-between items-center text-zinc-600 dark:text-zinc-300 py-1 border-b border-zinc-100/40 dark:border-zinc-800/30 last:border-0">
+                              <span className="font-semibold text-zinc-700 dark:text-zinc-200">
                                 {getTranslation(language, 'mealCostRow', {
                                   meals: (member.totalMeals || 0).toFixed(1),
                                   rate: currentMealRate.toFixed(2)
@@ -337,9 +339,9 @@ export function SummaryDashboard({
                                 ? getTranslation(language, 'equalSplitLabel')
                                 : getTranslation(language, 'individualSplitLabel');
                               return (
-                                <div key={adj.categoryId} className="flex justify-between items-center text-zinc-650 dark:text-zinc-305 py-1 border-b border-zinc-150/40 dark:border-zinc-800/30 last:border-0">
+                                <div key={adj.categoryId} className="flex justify-between items-center text-zinc-600 dark:text-zinc-300 py-1 border-b border-zinc-100/40 dark:border-zinc-800/30 last:border-0">
                                   <div className="flex items-center gap-1.5">
-                                    <span className="font-semibold text-zinc-750 dark:text-zinc-200">{adj.categoryName}</span>
+                                    <span className="font-semibold text-zinc-700 dark:text-zinc-200">{adj.categoryName}</span>
                                     <span className="text-[8px] font-extrabold text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-zinc-700 px-1 py-0.2 rounded bg-white dark:bg-zinc-800 shrink-0">
                                       {splitLabel}
                                     </span>
@@ -369,7 +371,7 @@ export function SummaryDashboard({
 
                   {/* Summary Box Footer */}
                   {expandedMembers[member.id] && (
-                    <div className="mt-4 pt-2.5 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-955 -mx-5 -mb-5 px-5 py-2.5 rounded-b-2xl flex flex-col gap-1.5 items-stretch animate-slide-down text-[10px] sm:text-xs text-left">
+                    <div className="mt-4 pt-2.5 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950 -mx-5 -mb-5 px-5 py-2.5 rounded-b-2xl flex flex-col gap-1.5 items-stretch animate-slide-down text-[10px] sm:text-xs text-left">
                       <div className="flex justify-between items-center">
                         <span className="font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
                           {language === 'bn' ? 'হিসাব সমীকরণ' : 'Ledger Equation'}
@@ -378,14 +380,14 @@ export function SummaryDashboard({
                           {language === 'bn' ? '(জমা - খরচ)' : '(Paid - Cost)'}
                         </span>
                       </div>
-                      <div className="flex justify-between items-center text-zinc-750 dark:text-zinc-300 font-black pt-1.5 border-t border-dashed border-zinc-200 dark:border-zinc-800">
+                      <div className="flex justify-between items-center text-zinc-700 dark:text-zinc-300 font-black pt-1.5 border-t border-dashed border-zinc-200 dark:border-zinc-800">
                         <div className="flex items-center gap-1">
                           <span>৳{(member.bazaarAmount + totalMinus).toFixed(1)}</span>
-                          <span className="text-zinc-450 font-normal text-[10px]">-</span>
+                          <span className="text-zinc-400 font-normal text-[10px]">-</span>
                           <span>৳{(mealExpense + totalPlus).toFixed(1)}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <span className="text-zinc-450 font-normal text-[10px]">=</span>
+                          <span className="text-zinc-400 font-normal text-[10px]">=</span>
                           <span className={finalBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
                             {finalBalance >= 0 ? '+' : '-'}৳{Math.abs(finalBalance).toFixed(1)}
                           </span>
@@ -409,6 +411,7 @@ export function SummaryDashboard({
           member={editingMember}
           language={language}
           onUpdateMember={onUpdateMemberFull}
+          onAddCategory={onAddCategory}
         />
       )}
 

@@ -45,7 +45,7 @@ export default function Home() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-zinc-955 flex flex-col items-center justify-center font-sans text-zinc-100 gap-4">
+      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center font-sans text-zinc-100 gap-4">
         {/* Animated Custom Ring Spinner */}
         <div className="relative w-14 h-14">
           <div className="absolute inset-0 rounded-full border-4 border-emerald-500/15"></div>
@@ -64,7 +64,7 @@ export default function Home() {
   }
 
   const handleDownloadPDF = () => {
-    generateMessPDF(messName, selectedMonth, summary, categories, members);
+    generateMessPDF(messName, selectedMonth, summary, categories, members, language);
   };
 
   const handleDownloadImage = () => {
@@ -109,6 +109,7 @@ export default function Home() {
           onOpenAddMemberModal={() => setIsMemberModalOpen(true)}
           onRemoveMember={removeMember}
           onUpdateMemberFull={updateMemberFull}
+          onAddCategory={addCategory}
         />
 
         {/* Categories Manager Panel */}
@@ -163,6 +164,7 @@ export default function Home() {
           categories={categories}
           language={language}
           onAddMember={addMember}
+          onAddCategory={addCategory}
         />
       )}
 

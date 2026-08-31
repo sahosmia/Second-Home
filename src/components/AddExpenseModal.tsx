@@ -34,6 +34,7 @@ export function AddExpenseModal({
   const [occurrence, setOccurrence] = useState<ExpenseOccurrence>('REGULAR');
   const [isFixed, setIsFixed] = useState<boolean>(true);
   const [lumpSum, setLumpSum] = useState<string>('');
+  const [note, setNote] = useState<string>('');
   const [error, setError] = useState<string>('');
 
   const cleanNumberInput = (val: string): string => {
@@ -93,6 +94,7 @@ export function AddExpenseModal({
       totalLumpSum: finalLumpSum,
       occurrence,
       isFixed: occurrence === 'REGULAR' ? isFixed : false,
+      note: note.trim() ? note.trim() : undefined,
     }, initialAmounts);
 
     onClose();
@@ -102,7 +104,7 @@ export function AddExpenseModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in" onClick={onClose}>
       <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-scale-in max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-150 dark:border-zinc-850 px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-100 dark:border-zinc-800 px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <div className="p-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg">
               <Settings className="w-4 h-4" />
@@ -135,7 +137,7 @@ export function AddExpenseModal({
               placeholder="e.g. WiFi Bill, Room Rent, Gas"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 border border-zinc-350 dark:border-zinc-800 rounded-xl text-zinc-855 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white dark:bg-zinc-900 font-medium transition-all"
+              className="w-full px-3.5 py-2.5 border border-zinc-300 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white dark:bg-zinc-900 font-medium transition-all"
             />
           </div>
 
@@ -219,7 +221,7 @@ export function AddExpenseModal({
                       : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'
                   }`}
                 >
-                  PLUS
+                  {getTranslation(language, 'plusShort')}
                 </button>
                 <button
                   type="button"
@@ -230,7 +232,7 @@ export function AddExpenseModal({
                       : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'
                   }`}
                 >
-                  MINUS
+                  {getTranslation(language, 'minusShort')}
                 </button>
               </div>
             </div>
@@ -250,7 +252,7 @@ export function AddExpenseModal({
                       : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'
                   }`}
                 >
-                  EQUAL
+                  {getTranslation(language, 'equalSplitLabel')}
                 </button>
                 <button
                   type="button"
@@ -261,7 +263,7 @@ export function AddExpenseModal({
                       : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'
                   }`}
                 >
-                  INDIV
+                  {getTranslation(language, 'individualSplitLabel')}
                 </button>
               </div>
             </div>
@@ -284,17 +286,17 @@ export function AddExpenseModal({
                   placeholder="0.00"
                   value={lumpSum}
                   onChange={(e) => setLumpSum(cleanNumberInput(e.target.value))}
-                  className="w-full pl-7 pr-3 py-2 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-955 dark:text-emerald-100 font-bold text-sm bg-white dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full pl-7 pr-3 py-2 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-950 dark:text-emerald-100 font-bold text-sm bg-white dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
-              <p className="text-[11px] text-emerald-705 dark:text-emerald-400 mt-2 leading-relaxed">
+              <p className="text-[11px] text-emerald-700 dark:text-emerald-400 mt-2 leading-relaxed">
                 Will auto-divide equally across all <strong>{members.length}</strong> current member{members.length !== 1 ? 's' : ''} (<strong>৳{members.length > 0 ? ((parseFloat(lumpSum) || 0) / members.length).toFixed(2) : '0.00'}</strong> each).
               </p>
             </div>
           )}
 
           {splitType === 'INDIVIDUAL' && (
-            <div className="pt-3 border-t border-zinc-150 dark:border-zinc-800 space-y-3 animate-in slide-in-from-top-1 duration-150 text-left">
+            <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800 space-y-3 animate-in slide-in-from-top-1 duration-150 text-left">
               <h3 className="text-xs font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5" />
                 {getTranslation(language, 'initialIndividualValues')}
@@ -318,7 +320,7 @@ export function AddExpenseModal({
                           placeholder="0.00"
                           value={memberAmounts[m.id] || ''}
                           onChange={(e) => handleMemberAmountChange(m.id, e.target.value)}
-                          className="w-full pl-6 pr-2.5 py-1 border border-zinc-300 dark:border-zinc-700 rounded-lg text-zinc-855 dark:text-zinc-100 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white dark:bg-zinc-900"
+                          className="w-full pl-6 pr-2.5 py-1 border border-zinc-300 dark:border-zinc-700 rounded-lg text-zinc-900 dark:text-zinc-100 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white dark:bg-zinc-900"
                         />
                       </div>
                     </div>
@@ -328,11 +330,28 @@ export function AddExpenseModal({
             </div>
           )}
 
-          <div className="flex items-center gap-2.5 pt-4 border-t border-zinc-150 dark:border-zinc-800 shrink-0">
+          <div className="text-left pt-3 border-t border-zinc-100 dark:border-zinc-800">
+            <label htmlFor="modal-cat-note" className="block text-xs font-bold text-zinc-600 dark:text-zinc-400 uppercase mb-1.5">
+              {getTranslation(language, 'noteLabel')}
+            </label>
+            <textarea
+              id="modal-cat-note"
+              rows={2}
+              placeholder={getTranslation(language, 'notePlaceholder')}
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className="w-full px-3.5 py-2.5 border border-zinc-300 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white dark:bg-zinc-900 font-medium transition-all resize-none"
+            />
+            <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-1 leading-relaxed">
+              {getTranslation(language, 'noteHelper')}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2.5 pt-4 border-t border-zinc-100 dark:border-zinc-800 shrink-0">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-500 hover:text-zinc-855 dark:text-zinc-400 dark:hover:text-zinc-200 border border-zinc-300 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-xl transition-all cursor-pointer text-center"
+              className="flex-1 px-4 py-2.5 text-xs sm:text-sm font-semibold text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200 border border-zinc-300 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-xl transition-all cursor-pointer text-center"
             >
               {getTranslation(language, 'cancel')}
             </button>

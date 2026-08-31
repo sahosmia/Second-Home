@@ -19,6 +19,7 @@ interface EditMemberModalProps {
     totalMeals: number,
     customCosts: { categoryId: string; amount: number }[]
   ) => void;
+  onAddCategory: (category: Omit<CostCategory, 'id'>) => void;
 }
 
 export function EditMemberModal({
@@ -28,6 +29,7 @@ export function EditMemberModal({
   member,
   language,
   onUpdateMember,
+  onAddCategory,
 }: EditMemberModalProps) {
   const [name, setName] = useState<string>('');
   const [bazaar, setBazaar] = useState<string>('');
@@ -75,6 +77,17 @@ export function EditMemberModal({
     }));
   };
 
+  const handleQuickAddCommonFields = () => {
+    const hasOldDue = categories.some((c) => c.name.trim().toLowerCase() === getTranslation(language, 'oldDueDefaultName').toLowerCase());
+    const hasAdvance = categories.some((c) => c.name.trim().toLowerCase() === getTranslation(language, 'advanceBalanceDefaultName').toLowerCase());
+    if (!hasOldDue) {
+      onAddCategory({ name: getTranslation(language, 'oldDueDefaultName'), type: 'PLUS', splitType: 'INDIVIDUAL', occurrence: 'REGULAR', isFixed: false });
+    }
+    if (!hasAdvance) {
+      onAddCategory({ name: getTranslation(language, 'advanceBalanceDefaultName'), type: 'MINUS', splitType: 'INDIVIDUAL', occurrence: 'REGULAR', isFixed: false });
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -100,7 +113,7 @@ export function EditMemberModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in" onClick={onClose}>
       <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-scale-in max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
         {/* Modal Header */}
-        <div className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-150 dark:border-zinc-850 px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-100 dark:border-zinc-800 px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <div className="p-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg">
               <Edit className="w-4 h-4" />
@@ -174,22 +187,22 @@ export function EditMemberModal({
           </div>
 
           {/* Individual split category dynamic inputs */}
-          {individualCategories.length > 0 && (
-            <div className="pt-3 border-t border-zinc-150 dark:border-zinc-800 space-y-3 text-left">
-              <h3 className="text-xs font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
-                {getTranslation(language, 'customFeesHeader')}
-                <span title="Amounts specific to this member">
-                  <HelpCircle className="w-3.5 h-3.5 text-zinc-300 dark:text-zinc-600" />
-                </span>
-              </h3>
+          <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800 space-y-3 text-left">
+            <h3 className="text-xs font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+              {getTranslation(language, 'customFeesHeader')}
+              <span title="Amounts specific to this member">
+                <HelpCircle className="w-3.5 h-3.5 text-zinc-300 dark:text-zinc-600" />
+              </span>
+            </h3>
 
+            {individualCategories.length > 0 ? (
               <div className="grid grid-cols-2 gap-4">
                 {individualCategories.map((cat) => (
                   <div key={cat.id}>
                     <label htmlFor={`edit-member-${cat.id}`} className="block text-xs font-bold text-zinc-600 dark:text-zinc-400 uppercase mb-1 flex items-center justify-between">
                       <span className="truncate">{cat.name}</span>
                       <span className={`text-[9px] px-1 py-0.1 rounded font-black ${cat.type === 'PLUS' ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-950 text-rose-800 dark:text-rose-400'}`}>
-                        {cat.type}
+                        {getTranslation(language, cat.type === 'PLUS' ? 'plusShort' : 'minusShort')}
                       </span>
                     </label>
                     <div className="relative rounded-xl shadow-xs">
@@ -210,10 +223,23 @@ export function EditMemberModal({
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="bg-zinc-50 dark:bg-zinc-900 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl p-3 space-y-2">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                  {getTranslation(language, 'noIndividualFieldsYet')}
+                </p>
+                <button
+                  type="button"
+                  onClick={handleQuickAddCommonFields}
+                  className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 px-2.5 py-1.5 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-950/50 transition-all cursor-pointer"
+                >
+                  {getTranslation(language, 'quickAddCommonFields')}
+                </button>
+              </div>
+            )}
+          </div>
 
-          <div className="flex items-center gap-2.5 pt-4 border-t border-zinc-150 dark:border-zinc-800 shrink-0">
+          <div className="flex items-center gap-2.5 pt-4 border-t border-zinc-100 dark:border-zinc-800 shrink-0">
             <button
               type="button"
               onClick={onClose}

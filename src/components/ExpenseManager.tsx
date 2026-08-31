@@ -59,7 +59,7 @@ export function ExpenseManager({
   return (
     <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xs overflow-hidden transition-all print:hidden">
       {/* Panel Header */}
-      <div className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-150 dark:border-zinc-800 px-6 py-4 flex items-center justify-between gap-2">
+      <div className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-100 dark:border-zinc-800 px-6 py-4 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Settings className="w-4.5 h-4.5 text-zinc-500 dark:text-zinc-400 shrink-0" />
           <h2 className="text-sm sm:text-base font-extrabold text-zinc-800 dark:text-zinc-100">
@@ -74,7 +74,7 @@ export function ExpenseManager({
           <button
             type="button"
             onClick={onOpenAddCategoryModal}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-555 rounded-lg shadow-sm transition-all cursor-pointer"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 rounded-lg shadow-sm transition-all cursor-pointer"
             title={getTranslation(language, 'addCategory')}
           >
             <Plus className="w-3.5 h-3.5" />
@@ -133,7 +133,7 @@ export function ExpenseManager({
                                 : 'bg-rose-50 dark:bg-rose-950/30 text-rose-800 dark:text-rose-400'
                             }`}
                           >
-                            {cat.type}
+                            {getTranslation(language, isPlus ? 'plusShort' : 'minusShort')}
                           </span>
                           <span
                             className={`text-[8px] font-extrabold px-1.5 py-0.5 rounded-md tracking-wider ${
@@ -151,7 +151,7 @@ export function ExpenseManager({
                               className={`text-[8px] font-extrabold px-1.5 py-0.5 rounded-md tracking-wider ${
                                 cat.isFixed
                                   ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400'
-                                  : 'bg-amber-50 dark:bg-amber-955/30 text-amber-700 dark:text-amber-400'
+                                  : 'bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400'
                               }`}
                             >
                               {cat.isFixed
@@ -185,7 +185,7 @@ export function ExpenseManager({
                     {/* Prominent Amount display on top, matching member cards */}
                     <div className="mt-4 flex items-end justify-between gap-2">
                       <div>
-                        <p className="text-[9px] font-extrabold text-zinc-450 dark:text-zinc-555 uppercase tracking-wider">
+                        <p className="text-[9px] font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
                           {getTranslation(language, 'totalCost')} {!isEqual && `(${getTranslation(language, 'individualSplitLabel')})`}
                         </p>
                         <h5 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white tracking-tight mt-0.5">
@@ -208,10 +208,18 @@ export function ExpenseManager({
                     {/* Collapsible details matching member card drawer */}
                     {expandedExpenses[cat.id] && (
                       <div className="animate-slide-down mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 space-y-3.5 text-left">
+                        {cat.note && (
+                          <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 p-2.5 rounded-xl text-xs">
+                            <p className="font-extrabold text-amber-700 dark:text-amber-400 text-[9px] uppercase tracking-wider mb-0.5">
+                              {getTranslation(language, 'noteLabel').replace(/\s*\(.*\)/, '')}
+                            </p>
+                            <p className="text-amber-800 dark:text-amber-300 font-semibold leading-relaxed break-words">{cat.note}</p>
+                          </div>
+                        )}
                         {isEqual ? (
                           <div className="space-y-3">
                             {/* Read-only Cost Share breakdown */}
-                            <div className="bg-zinc-50 dark:bg-zinc-955 border border-zinc-150 dark:border-zinc-850 p-2.5 rounded-xl flex items-center justify-between text-xs">
+                            <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-800 p-2.5 rounded-xl flex items-center justify-between text-xs">
                               <span className="font-semibold text-zinc-500 dark:text-zinc-400">
                                 {language === 'bn' ? 'জনপ্রতি শেয়ার' : 'Per Member Share'}
                               </span>
@@ -222,7 +230,7 @@ export function ExpenseManager({
 
                             {/* Clickable Badge Distribution exclusion checklist */}
                             <div className="space-y-1.5">
-                              <p className="text-[9px] font-extrabold text-zinc-450 dark:text-zinc-400 uppercase tracking-wide flex items-center justify-between">
+                              <p className="text-[9px] font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-wide flex items-center justify-between">
                                 <span>{getTranslation(language, 'splitDistribution')} ({activeCount} / {members.length})</span>
                                 <span className="text-[8px] text-zinc-400 dark:text-zinc-500 normal-case font-semibold">{getTranslation(language, 'clickToExclude')}</span>
                               </p>
@@ -239,12 +247,12 @@ export function ExpenseManager({
                                         onClick={() => onToggleExclusion(cat.id, member.id)}
                                         className={`text-[9px] font-extrabold px-2 py-0.5 rounded-md border transition-all cursor-pointer flex items-center gap-1 ${
                                           isExcluded
-                                            ? 'bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-400 dark:text-zinc-505 line-through decoration-zinc-450 dark:decoration-zinc-700'
-                                            : 'bg-emerald-50/50 dark:bg-emerald-955/20 border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30'
+                                            ? 'bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-400 dark:text-zinc-500 line-through decoration-zinc-400 dark:decoration-zinc-700'
+                                            : 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30'
                                         }`}
                                         title={isExcluded ? `Include ${member.name}` : `Exclude ${member.name}`}
                                       >
-                                        {isExcluded ? <UserMinus className="w-2.5 h-2.5" /> : <UserCheck className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-450" />}
+                                        {isExcluded ? <UserMinus className="w-2.5 h-2.5" /> : <UserCheck className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-400" />}
                                         <span>{member.name.split(' ')[0]}</span>
                                       </button>
                                     );
@@ -256,7 +264,7 @@ export function ExpenseManager({
                         ) : (
                           // INDIVIDUAL category: display allocated amounts for each member
                           <div className="space-y-2">
-                            <p className="text-[9px] font-extrabold text-zinc-450 dark:text-zinc-400 uppercase tracking-wider">
+                            <p className="text-[9px] font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
                               {language === 'bn' ? 'মেম্বার ভিত্তিক বন্টন' : 'Member-wise Distribution'}
                             </p>
                             <div className="space-y-1 max-h-[140px] overflow-y-auto pr-1">
@@ -296,7 +304,7 @@ export function ExpenseManager({
 
       {mounted && deletingCategory && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-fade-in">
-          <div className="bg-zinc-955 border border-zinc-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl transition-all scale-100 duration-200 text-zinc-100 text-left">
+          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl transition-all scale-100 duration-200 text-zinc-100 text-left">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2.5 bg-rose-500/10 text-rose-500 rounded-xl">
                 <ShieldAlert className="w-6 h-6 animate-bounce" />
