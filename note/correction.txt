@@ -1,0 +1,36 @@
+* screensort, 
+
+* input e 0 thakche , likte gele 024 ai rokom hoye jai, ami cai 24 ai rokom
+
+
+dark mode add koro, deko light and dark dui sytemei jeno all design, color perfectly show kore, initial obostai system defaulte mode thakbe
+
+
+
+* expence type (regular, on time), regular type expense gulo data clear  korle jeno theke jotokhon na heard reset dice,
+
+
+* member card ar line alignment vange gese carder footer e desktop e, aber theme mode e background e design odd lagche  
+
+* member card er joma gulo upore ar koroch ba expense gulo niche deako
+
+* sob kisu jeno smoothe animation hoi, 
+* expense list ta jeno member er moto hoi card wise show hobe, toggoler thakbe details dekar jonno, total amount ta just upore show hobe
+
+
+* Reload er somoy kono alert debar dorkar nai ar.
+* তাত্ক্ষণিক মেস ক্যালকুলেটর ata change kore onno kisu dao
+
+
+*kisu kisu expense regular holeo ata change able abar kisu fixed, 
+jemon bara vara fixed, abar electricity bill changeable, ata reset er somoy keyal rakte hobe
+
+
+
+
+
+
+
+
+
+* seings icon rakte pari, jekane language, theme mode, name ai gulo mange kora jabe
